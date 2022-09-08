@@ -46,13 +46,13 @@ int string_to_number(char *s, unsigned long *num) {
     s = stpblk(s);
     ns = s;
     len = strlen(s);
-    if ((!strnicmp(s, "0x", 2))) { /* check 0[xX]nnnnnnnn */
+    if ((!strncasecmp(s, "0x", 2))) { /* check 0[xX]nnnnnnnn */
         /* Hex number */
         s += 2;
         ns += 2;
         base = 16;
-    } else if ((!strnicmp(s, "x", 1)) || /* check [xX]nnnnnnnn */
-               (s[0] == '$')) {          /* check $nnnnnnnn */
+    } else if ((!strncasecmp(s, "x", 1)) || /* check [xX]nnnnnnnn */
+               (s[0] == '$')) {             /* check $nnnnnnnn */
         /* Hex number */
         s++;
         ns++;
