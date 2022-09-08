@@ -247,7 +247,7 @@ void zfree(void *mem) {
 struct Node *find_name(struct List *l, char *s) {
     struct Node *n = l->lh_Head;
     while (n->ln_Succ) {
-        if (!stricmp(s, n->ln_Name)) {
+        if (!strcasecmp(s, n->ln_Name)) {
             return (n);
         }
         n = n->ln_Succ;

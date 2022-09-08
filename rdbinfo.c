@@ -188,7 +188,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
     for (dn = dl->lh_Head; (!ctrlc) && dn->ln_Succ; ctrlc = check_break(), dn = dn->ln_Succ) {
         struct device *d = ptrfrom(struct device, node, dn);
 
-        if (dev_name == NULL || (!stricmp(dev_name, d->name))) {
+        if (dev_name == NULL || (!strcasecmp(dev_name, d->name))) {
             /* walk list of units. */
             for (un = d->units.lh_Head; (!ctrlc) && un->ln_Succ; ctrlc = check_break(), un = un->ln_Succ) {
                 struct unit *u = ptrfrom(struct unit, node, un);
@@ -200,7 +200,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                         struct partition *p = ptrfrom(struct partition, node, pn);
                         int do_it = 1;
 
-                        if (part_name && stricmp(p->name, part_name)) {
+                        if (part_name && strcasecmp(p->name, part_name)) {
                             do_it = 0;
                         }
                         if (start_block != (ulong)-1 && start_block != p->start_block) {
