@@ -43,7 +43,7 @@ int string_to_number(char *s, unsigned long *num) {
     int base, errsave = errno;
     unsigned long res;
     int len;
-    s = stpblk(s);
+    s += strspn(s, " \f\n\r\t\v");
     ns = s;
     len = strlen(s);
     if ((!strncasecmp(s, "0x", 2))) { /* check 0[xX]nnnnnnnn */
