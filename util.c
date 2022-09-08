@@ -29,7 +29,6 @@
 #include "util.h"
 #include "string.h"
 #include <ctype.h>
-#include <error.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
