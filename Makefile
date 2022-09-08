@@ -1,4 +1,5 @@
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
+CFLAGS = -mcrt=nix20
 CC = $(sdkprefix)gcc
 style = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 .PHONY: all
