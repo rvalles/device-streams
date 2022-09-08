@@ -33,15 +33,6 @@
 #include <exec/io.h>
 #include <exec/ports.h>
 
-struct device_data {
-    struct MsgPort *port;
-    struct IORequest *io;
-    char *name;
-    ulong unit;
-    ulong flags;
-    int open;
-};
-
 struct device_data *init_device(char *name, ulong unit, ulong flags, ulong iosize);
 int open_device(struct device_data *dd);
 void close_device(struct device_data *dd);

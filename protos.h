@@ -1,3 +1,47 @@
+#include <devices/hardblocks.h>
+struct device {
+    struct Node node;
+    struct List units;
+    char *name; /* name of exec device. */
+};
+/* structure that holds all info on this paticular unit for an exec device. */
+struct unit {
+    struct Node node;
+    struct List parts;
+    struct RigidDiskBlock *rdb;
+    char *name; /* just a pointer to the */
+    /* lists data. */
+    ulong rdb_at;           /* what block the rdb is at. */
+    ulong unit;             /* unit number of drive. */
+    ulong flags;            /* unit number of drive. */
+    ulong total_blocks;     /* total blocks on drive. */
+    ulong cylinders;        /* number of cylinders. */
+    ulong heads;            /* number of heads. */
+    ulong blocks_per_track; /* number of blocks per head */
+    /* per cylinder. */
+    ulong bytes_per_block; /* number of bytes per block. */
+};
+struct partition {
+    struct Node node;
+    struct unit *unit;        /* back pointer. */
+    struct PartitionBlock pb; /* partition block. */
+    char *name;               /* name of the partition. */
+    ulong start_block;        /* block that partition */
+    /* starts on. */
+    ulong end_block; /* block that partition ends */
+    /* on. */
+    ulong total_blocks; /* total number of blocks for */
+    /* this partition (e-s+1) */
+    ulong block_size; /* size of blocks for this partition. */
+};
+struct device_data {
+    struct MsgPort *port;
+    struct IORequest *io;
+    char *name;
+    ulong unit;
+    ulong flags;
+    int open;
+};
 /* START: "getdevices.c" */
 struct List *get_drive_list(void);
 void free_drive_list(struct List *l);
