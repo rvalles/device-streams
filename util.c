@@ -127,7 +127,7 @@ char *fgetline(FILE *fp) {
     enum local_constants { locbufsize = 40 };
     char *retstr = NULL, *temp;
     char locbuf[locbufsize];
-    char locbuflen = 0;
+    unsigned char locbuflen = 0;
 
     while (1) { /* do forever. */
         while (locbuflen < (locbufsize - 1)) {
