@@ -61,7 +61,7 @@ struct List *get_drive_list(void) {
     /* walk the dos list and fetch our device names. */
     dl = LockDosList(LDF_DEVICES | LDF_READ);
     {
-        while (dl = NextDosEntry(dl, LDF_DEVICES)) {
+        while (dl = NextDosEntry(dl, LDF_DEVICES), dl) {
             char *name;
 
             name = get_hard_drive_device_name(dl);
@@ -97,7 +97,7 @@ void free_drive_list(struct List *l) {
         struct Node *n;
         struct device *next = ptrfrom(struct device, node, d->node.ln_Succ);
         D(verbose_debug_message("zfree()'ing \"%s\"", d->name));
-        while (n = RemHead(&d->units)) {
+        while (n = RemHead(&d->units), n) {
             struct unit *u = ptrfrom(struct unit, node, n);
             free_unit(u);
         }
@@ -224,7 +224,7 @@ void do_unit(struct device *dev, struct device_data *dd) {
 void free_unit(struct unit *u) {
     if (u) {
         struct Node *n;
-        while (n = RemHead(&u->parts)) {
+        while (n = RemHead(&u->parts), n) {
             struct partition *p = ptrfrom(struct partition, node, n);
             free_partition(p);
         }
