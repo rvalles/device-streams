@@ -73,7 +73,7 @@ void free_device(struct device_data *dd) {
 int open_device(struct device_data *dd) {
     int error = -1;
     if (dd && !dd->open) {
-        error = OpenDevice((unsigned char *) dd->name, dd->unit, dd->io, dd->flags);
+        error = OpenDevice((unsigned char *)dd->name, dd->unit, dd->io, dd->flags);
         if (!error) {
             dd->open = 1;
         } else {

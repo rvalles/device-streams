@@ -23,7 +23,7 @@ typedef struct unit_s {
 } Unit;
 struct partition {
     struct Node node;
-    Unit *unit;        /* back pointer. */
+    Unit *unit;               /* back pointer. */
     struct PartitionBlock pb; /* partition block. */
     char *name;               /* name of the partition. */
     ulong start_block;        /* block that partition */
