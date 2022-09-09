@@ -98,7 +98,7 @@ void free_drive_list(struct List *l) {
         struct device *next = ptrfrom(struct device, node, d->node.ln_Succ);
         D(verbose_debug_message("zfree()'ing \"%s\"", d->name));
         while (n = RemHead(&d->units), n) {
-            struct unit *u = ptrfrom(struct unit, node, n);
+            Unit *u = ptrfrom(Unit, node, n);
             free_unit(u);
         }
         zfree(d->name); /* free name. */
@@ -170,7 +170,7 @@ ulong checksum(ulong sl, ulong *buf) {
 }
 
 void do_unit(struct device *dev, struct device_data *dd) {
-    struct unit *u = zmalloc(sizeof(*u));
+    Unit *u = zmalloc(sizeof(*u));
     if (u) {
         int i;
         u->name = dev->name;
@@ -221,7 +221,7 @@ void do_unit(struct device *dev, struct device_data *dd) {
     }
 }
 
-void free_unit(struct unit *u) {
+void free_unit(Unit *u) {
     if (u) {
         struct Node *n;
         while (n = RemHead(&u->parts), n) {
@@ -233,7 +233,7 @@ void free_unit(struct unit *u) {
     }
 }
 
-void get_partitions(struct device_data *dd, struct unit *u) {
+void get_partitions(struct device_data *dd, Unit *u) {
     ulong bpb = u->bytes_per_block;
     struct PartitionBlock *pb = zmalloc(bpb);
     if (pb) {

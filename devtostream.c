@@ -369,7 +369,7 @@ struct partition *find_partition(struct List *dl, char *dev_name, char *part_nam
             /* walk list of units. */
 
             for (un = d->units.lh_Head; un->ln_Succ; un = un->ln_Succ) {
-                struct unit *u = ptrfrom(struct unit, node, un);
+                Unit *u = ptrfrom(Unit, node, un);
 
                 if (unit == (ulong)-1 || (u->unit == unit)) {
                     /* walk list of partitions. */

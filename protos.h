@@ -5,7 +5,7 @@ struct device {
     char *name; /* name of exec device. */
 };
 /* structure that holds all info on this paticular unit for an exec device. */
-struct unit {
+typedef struct unit_s {
     struct Node node;
     struct List parts;
     struct RigidDiskBlock *rdb;
@@ -20,10 +20,10 @@ struct unit {
     ulong blocks_per_track; /* number of blocks per head */
     /* per cylinder. */
     ulong bytes_per_block; /* number of bytes per block. */
-};
+} Unit;
 struct partition {
     struct Node node;
-    struct unit *unit;        /* back pointer. */
+    Unit *unit;        /* back pointer. */
     struct PartitionBlock pb; /* partition block. */
     char *name;               /* name of the partition. */
     ulong start_block;        /* block that partition */
@@ -49,8 +49,8 @@ int add_name_to_drive_list(struct List *l, char *dev_name);
 char *get_hard_drive_device_name(struct DosList *dl);
 ulong checksum(ulong sl, ulong *buf);
 void do_unit(struct device *dev, struct device_data *dd);
-void free_unit(struct unit *u);
-void get_partitions(struct device_data *dd, struct unit *u);
+void free_unit(Unit *u);
+void get_partitions(struct device_data *dd, Unit *u);
 void free_partition(struct partition *p);
 /* END: "getdevices.c" */
 /* START: "devices.c" */

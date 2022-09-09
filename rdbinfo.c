@@ -191,7 +191,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
         if (dev_name == NULL || (!strcasecmp(dev_name, d->name))) {
             /* walk list of units. */
             for (un = d->units.lh_Head; (!ctrlc) && un->ln_Succ; ctrlc = check_break(), un = un->ln_Succ) {
-                struct unit *u = ptrfrom(struct unit, node, un);
+                Unit *u = ptrfrom(Unit, node, un);
                 int unit_printed = 0;
 
                 if (unit == (ulong)-1 || (u->unit == unit)) {
