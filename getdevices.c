@@ -296,3 +296,44 @@ void get_partitions(struct device_data *dd, Unit *u) {
 }
 
 void free_partition(struct partition *p) { zfree(p); }
+
+/* all the arguments, except the drive list itself, are search limiters. */
+/* they are generalized with: NULL for strings and (ulong)-1 for ulongs. */
+/* also the function returns as soon as all non-generalized criterion are met.*/
+struct partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
+    struct Node *dn, *un, *pn;
+    /* walk list of devices. */
+    for (dn = dl->lh_Head; dn->ln_Succ; dn = dn->ln_Succ) {
+        struct device *d = ptrfrom(struct device, node, dn);
+
+        if (dev_name == NULL || (!strcasecmp(dev_name, d->name))) {
+            /* walk list of units. */
+
+            for (un = d->units.lh_Head; un->ln_Succ; un = un->ln_Succ) {
+                Unit *u = ptrfrom(Unit, node, un);
+
+                if (unit == (ulong)-1 || (u->unit == unit)) {
+                    /* walk list of partitions. */
+                    for (pn = u->parts.lh_Head; pn->ln_Succ; pn = pn->ln_Succ) {
+                        struct partition *p = ptrfrom(struct partition, node, pn);
+                        int do_it = 1;
+
+                        if (part_name && strcasecmp(p->name, part_name)) {
+                            do_it = 0;
+                        }
+                        if (start_block != (ulong)-1 && (start_block < p->start_block || start_block > p->end_block)) {
+                            do_it = 0;
+                        }
+                        if (end_block != (ulong)-1 && (end_block > p->end_block || end_block < p->start_block)) {
+                            do_it = 0;
+                        }
+                        if (do_it) {
+                            return (p);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return (NULL);
+}
