@@ -305,31 +305,21 @@ struct partition *find_partition(struct List *dl, char *dev_name, char *part_nam
     /* walk list of devices. */
     for (dn = dl->lh_Head; dn->ln_Succ; dn = dn->ln_Succ) {
         struct device *d = ptrfrom(struct device, node, dn);
-
         if (dev_name == NULL || (!strcasecmp(dev_name, d->name))) {
             /* walk list of units. */
-
             for (un = d->units.lh_Head; un->ln_Succ; un = un->ln_Succ) {
                 Unit *u = ptrfrom(Unit, node, un);
-
                 if (unit == (ulong)-1 || (u->unit == unit)) {
                     /* walk list of partitions. */
                     for (pn = u->parts.lh_Head; pn->ln_Succ; pn = pn->ln_Succ) {
                         struct partition *p = ptrfrom(struct partition, node, pn);
-                        int do_it = 1;
-
-                        if (part_name && strcasecmp(p->name, part_name)) {
-                            do_it = 0;
-                        }
-                        if (start_block != (ulong)-1 && (start_block < p->start_block || start_block > p->end_block)) {
-                            do_it = 0;
-                        }
-                        if (end_block != (ulong)-1 && (end_block > p->end_block || end_block < p->start_block)) {
-                            do_it = 0;
-                        }
-                        if (do_it) {
-                            return (p);
-                        }
+                        if (part_name && strcasecmp(p->name, part_name))
+                            continue;
+                        if (start_block != (ulong)-1 && (start_block < p->start_block || start_block > p->end_block))
+                            continue;
+                        if (end_block != (ulong)-1 && (end_block > p->end_block || end_block < p->start_block))
+                            continue;
+                        return (p);
                     }
                 }
             }
