@@ -18,7 +18,7 @@ xstreamtodev.o: streamtodev.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
 xdevtostream.o: devtostream.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
-.PHONY: sizes
+.PHONY: size
 size:
 	$(size) rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 .PHONY: lint
