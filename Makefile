@@ -1,6 +1,6 @@
 lintstyle = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
-crt=nix20
+crt = nix20
 size = $(sdkprefix)size
 CC = $(sdkprefix)gcc
 CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
