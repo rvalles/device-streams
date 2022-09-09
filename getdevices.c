@@ -254,7 +254,7 @@ void get_partitions(struct device_data *dd, struct unit *u) {
                             ulong *e;
                             CopyMem(pb, &p->pb, sizeof(struct PartitionBlock));
                             e = p->pb.pb_Environment;
-                            p->name = p->pb.pb_DriveName;
+                            p->name = (char *) p->pb.pb_DriveName;
                             p->name[p->name[0] + 1] = 0;
                             p->name++; /* adjust for size */
                                        /* byte. */
