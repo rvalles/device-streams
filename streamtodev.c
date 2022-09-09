@@ -28,7 +28,6 @@
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
 
-#include <cstartup.h>
 #include <ctype.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
