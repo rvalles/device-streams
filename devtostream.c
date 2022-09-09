@@ -39,6 +39,7 @@
 #include <getopt.h>
 #undef __GNU_LIBRARY__
 #include "getdevices.h"
+#include <sys/unistd.h>
 
 #if defined(SASC)
 /* we will handle this ourselves. */
