@@ -2,13 +2,14 @@ lintstyle = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
 crt = nix20
 size = $(sdkprefix)size
+binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 CC = $(sdkprefix)gcc
 CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
 CFLAGS += -Wall
 CFLAGS += -mcrt=$(crt)
 LDFLAGS += -mcrt=$(crt)
 .PHONY: all
-all: rdbinfo devtostream streamtodev xdevtostream xstreamtodev size
+all: $(binaries) size
 rdbinfo: rdbinfo.o util.o getdevices.o devices.o
 streamtodev: streamtodev.o util.o getdevices.o devices.o
 xstreamtodev: xstreamtodev.o util.o getdevices.o devices.o
@@ -20,7 +21,7 @@ xdevtostream.o: devtostream.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
 .PHONY: size
 size:
-	$(size) rdbinfo devtostream streamtodev xdevtostream xstreamtodev
+	$(size) $(binaries)
 .PHONY: lint
 lint:
 	@echo "* linting sources (code style)"
@@ -28,4 +29,4 @@ lint:
 .PHONY: clean
 clean:
 	@echo "* Removing build artifacts..."
-	rm -f rdbinfo devtostream xdevtostream streamtodev xstreamtodev *.o
+	rm -f $(binaries) *.o
