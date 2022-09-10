@@ -47,9 +47,8 @@ int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
 
-struct partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block);
 void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end);
-int check_values(struct partition *p, ulong st, ulong end, int exp);
+int check_values(Partition *p, ulong st, ulong end, int exp);
 
 struct option long_options[] = {{"output", required_argument, NULL, 'o'},
                                 {"rdb-name", required_argument, NULL, 'n'},
@@ -211,7 +210,7 @@ int main(int argc, char **argv) {
         /* there should be NO messages before this point!! */
         dl = get_drive_list();
         if (dl) {
-            struct partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
+            Partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
             if (p) {
                 if (opt_outfile_name) {
                     file = fopen(opt_outfile_name, "w");
@@ -274,7 +273,7 @@ int main(int argc, char **argv) {
     return (0);
 }
 
-int check_values(struct partition *p, ulong st, ulong end, int exp) {
+int check_values(Partition *p, ulong st, ulong end, int exp) {
     if (st > end) {
         message("error: Your end block [%ld] is less than your start block [%ld]!\n", st, end);
         return (0);

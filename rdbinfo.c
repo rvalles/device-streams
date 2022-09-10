@@ -197,7 +197,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                 if (unit == (ulong)-1 || (u->unit == unit)) {
                     /* walk list of partitions. */
                     for (pn = u->parts.lh_Head; (!ctrlc) && pn->ln_Succ; ctrlc = check_break(), pn = pn->ln_Succ) {
-                        struct partition *p = ptrfrom(struct partition, node, pn);
+                        Partition *p = ptrfrom(Partition, node, pn);
                         int do_it = 1;
 
                         if (part_name && strcasecmp(p->name, part_name)) {

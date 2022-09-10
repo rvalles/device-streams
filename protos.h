@@ -21,7 +21,7 @@ typedef struct unit_s {
     /* per cylinder. */
     ulong bytes_per_block; /* number of bytes per block. */
 } Unit;
-struct partition {
+typedef struct partition_s {
     struct Node node;
     Unit *unit;               /* back pointer. */
     struct PartitionBlock pb; /* partition block. */
@@ -33,7 +33,7 @@ struct partition {
     ulong total_blocks; /* total number of blocks for */
     /* this partition (e-s+1) */
     ulong block_size; /* size of blocks for this partition. */
-};
+} Partition;
 struct device_data {
     struct MsgPort *port;
     struct IORequest *io;
@@ -51,8 +51,8 @@ ulong checksum(ulong sl, ulong *buf);
 void do_unit(struct device *dev, struct device_data *dd);
 void free_unit(Unit *u);
 void get_partitions(struct device_data *dd, Unit *u);
-void free_partition(struct partition *p);
-struct partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block);
+void free_partition(Partition *p);
+Partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block);
 /* END: "getdevices.c" */
 /* START: "devices.c" */
 struct device_data *alloc_device(char *name, ulong unit, ulong flags, ulong iosize);

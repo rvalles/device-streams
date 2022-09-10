@@ -225,7 +225,7 @@ void free_unit(Unit *u) {
     if (u) {
         struct Node *n;
         while (n = RemHead(&u->parts), n) {
-            struct partition *p = ptrfrom(struct partition, node, n);
+            Partition *p = ptrfrom(Partition, node, n);
             free_partition(p);
         }
         zfree(u->rdb);
@@ -249,7 +249,7 @@ void get_partitions(struct device_data *dd, Unit *u) {
             if (pb->pb_ID == IDNAME_PARTITION) {
                 if (!checksum(pb->pb_SummedLongs, (ulong *)pb)) {
                     if (pb->pb_Environment[DE_TABLESIZE] > DE_UPPERCYL) {
-                        struct partition *p = zmalloc(sizeof(struct partition));
+                        Partition *p = zmalloc(sizeof(Partition));
                         if (p) {
                             ulong *e;
                             CopyMem(pb, &p->pb, sizeof(struct PartitionBlock));
@@ -295,12 +295,12 @@ void get_partitions(struct device_data *dd, Unit *u) {
     }
 }
 
-void free_partition(struct partition *p) { zfree(p); }
+void free_partition(Partition *p) { zfree(p); }
 
 /* all the arguments, except the drive list itself, are search limiters. */
 /* they are generalized with: NULL for strings and (ulong)-1 for ulongs. */
 /* also the function returns as soon as all non-generalized criterion are met.*/
-struct partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
+Partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
     struct Node *dn, *un, *pn;
     /* walk list of devices. */
     for (dn = dl->lh_Head; dn->ln_Succ; dn = dn->ln_Succ) {
@@ -314,7 +314,7 @@ struct partition *find_partition(struct List *dl, char *dev_name, char *part_nam
                 continue;
             /* walk list of partitions. */
             for (pn = u->parts.lh_Head; pn->ln_Succ; pn = pn->ln_Succ) {
-                struct partition *p = ptrfrom(struct partition, node, pn);
+                Partition *p = ptrfrom(Partition, node, pn);
                 if (part_name && strcasecmp(p->name, part_name))
                     continue;
                 if (start_block != (ulong)-1 && (start_block < p->start_block || start_block > p->end_block))
