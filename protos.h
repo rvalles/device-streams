@@ -34,34 +34,34 @@ typedef struct partition_s {
     /* this partition (e-s+1) */
     ulong block_size; /* size of blocks for this partition. */
 } Partition;
-struct device_data {
+typedef struct device_data_s {
     struct MsgPort *port;
     struct IORequest *io;
     char *name;
     ulong unit;
     ulong flags;
     int open;
-};
+} DeviceData;
 /* START: "getdevices.c" */
 struct List *get_drive_list(void);
 void free_drive_list(struct List *l);
 int add_name_to_drive_list(struct List *l, char *dev_name);
 char *get_hard_drive_device_name(struct DosList *dl);
 ulong checksum(ulong sl, ulong *buf);
-void do_unit(struct device *dev, struct device_data *dd);
+void do_unit(struct device *dev, DeviceData *dd);
 void free_unit(Unit *u);
-void get_partitions(struct device_data *dd, Unit *u);
+void get_partitions(DeviceData *dd, Unit *u);
 void free_partition(Partition *p);
 Partition *find_partition(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block);
 /* END: "getdevices.c" */
 /* START: "devices.c" */
-struct device_data *alloc_device(char *name, ulong unit, ulong flags, ulong iosize);
-void free_device(struct device_data *dd);
-int open_device(struct device_data *dd);
-void close_device(struct device_data *dd);
-ulong device_read(struct device_data *dd, ulong offset, ulong bytes, void *buffer);
-ulong device_write(struct device_data *dd, ulong offset, ulong bytes, void *buffer);
-int device_do_command(struct device_data *dd, UWORD command);
+DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize);
+void free_device(DeviceData *dd);
+int open_device(DeviceData *dd);
+void close_device(DeviceData *dd);
+ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer);
+ulong device_write(DeviceData *dd, ulong offset, ulong bytes, void *buffer);
+int device_do_command(DeviceData *dd, UWORD command);
 /* END: "devices.c" */
 /* START: "util.c" */
 int string_to_number(char *s, unsigned long *num);

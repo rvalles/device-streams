@@ -33,9 +33,9 @@
 #include <exec/io.h>
 #include <exec/ports.h>
 
-struct device_data *init_device(char *name, ulong unit, ulong flags, ulong iosize);
-int open_device(struct device_data *dd);
-void close_device(struct device_data *dd);
-void free_device(struct device_data *dd);
+DeviceData *init_device(char *name, ulong unit, ulong flags, ulong iosize);
+int open_device(DeviceData *dd);
+void close_device(DeviceData *dd);
+void free_device(DeviceData *dd);
 
 #endif /* _DEVICES_H */

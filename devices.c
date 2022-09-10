@@ -30,8 +30,8 @@
 #include "util.h"
 
 /* returns structure with device open. */
-struct device_data *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
-    struct device_data *dd = zmalloc(sizeof(*dd));
+DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
+    DeviceData *dd = zmalloc(sizeof(*dd));
     if (NULL == dd) {
         return (NULL);
     }
@@ -61,7 +61,7 @@ struct device_data *alloc_device(char *name, ulong unit, ulong flags, ulong iosi
     return (dd);
 }
 
-void free_device(struct device_data *dd) {
+void free_device(DeviceData *dd) {
     if (dd) {
         close_device(dd);
         DeleteIORequest(dd->io);
@@ -70,7 +70,7 @@ void free_device(struct device_data *dd) {
     }
 }
 
-int open_device(struct device_data *dd) {
+int open_device(DeviceData *dd) {
     int error = -1;
     if (dd && !dd->open) {
         error = OpenDevice((unsigned char *)dd->name, dd->unit, dd->io, dd->flags);
@@ -87,7 +87,7 @@ int open_device(struct device_data *dd) {
     return (error);
 }
 
-void close_device(struct device_data *dd) {
+void close_device(DeviceData *dd) {
     if (dd) {
         if (dd->open) {
             if (!CheckIO(dd->io)) {
@@ -101,7 +101,7 @@ void close_device(struct device_data *dd) {
 }
 
 /* returns actual number of bytes written or -1 for error. */
-ulong device_read(struct device_data *dd, ulong offset, ulong bytes, void *buffer) {
+ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
     struct IOStdReq *io = (struct IOStdReq *)dd->io;
     io->io_Length = bytes;
     io->io_Offset = offset;
@@ -114,7 +114,7 @@ ulong device_read(struct device_data *dd, ulong offset, ulong bytes, void *buffe
 }
 
 /* returns actual number of bytes written or -1 for error. */
-ulong device_write(struct device_data *dd, ulong offset, ulong bytes, void *buffer) {
+ulong device_write(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
     struct IOStdReq *io = (struct IOStdReq *)dd->io;
     io->io_Length = bytes;
     io->io_Offset = offset;
@@ -126,7 +126,7 @@ ulong device_write(struct device_data *dd, ulong offset, ulong bytes, void *buff
 }
 
 /* returns the error from DoIO () */
-int device_do_command(struct device_data *dd, UWORD command) {
+int device_do_command(DeviceData *dd, UWORD command) {
     int error = -1;
     if (dd) {
         if (dd->open) {

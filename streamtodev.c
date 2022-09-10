@@ -306,7 +306,7 @@ int check_break(void) {
 }
 
 void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end) {
-    struct device_data *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
+    DeviceData *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
     if (dd) {
         ulong num_buffers = number_of_buffer_blocks;
         ulong total_blocks = end - cb + 1;

@@ -79,7 +79,7 @@ struct List *get_drive_list(void) {
     while (dev->node.ln_Succ) {
         ulong i;
         for (i = 0; i < 7; i++) {
-            struct device_data *dd = alloc_device(dev->name, i, 0, sizeof(struct IOStdReq));
+            DeviceData *dd = alloc_device(dev->name, i, 0, sizeof(struct IOStdReq));
             if (dd) {
                 /* we have a unit. */
                 do_unit(dev, dd);
@@ -169,7 +169,7 @@ ulong checksum(ulong sl, ulong *buf) {
     return (ck);
 }
 
-void do_unit(struct device *dev, struct device_data *dd) {
+void do_unit(struct device *dev, DeviceData *dd) {
     Unit *u = zmalloc(sizeof(*u));
     if (u) {
         int i;
@@ -233,7 +233,7 @@ void free_unit(Unit *u) {
     }
 }
 
-void get_partitions(struct device_data *dd, Unit *u) {
+void get_partitions(DeviceData *dd, Unit *u) {
     ulong bpb = u->bytes_per_block;
     struct PartitionBlock *pb = zmalloc(bpb);
     if (pb) {
