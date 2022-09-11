@@ -1,4 +1,5 @@
 *.o
+*.lha
 rdbinfo
 devtostream
 xdevtostream
