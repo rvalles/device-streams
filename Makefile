@@ -1,6 +1,7 @@
 lintstyle = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
 crt = nix20
+lha = lha
 size = $(sdkprefix)size
 binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 CC = $(sdkprefix)gcc
@@ -30,3 +31,9 @@ lint:
 clean:
 	@echo "* Removing build artifacts..."
 	rm -f $(binaries) *.o
+archive:
+	@echo "* Archiving into lha..."
+	mkdir device_streams
+	cp -a $(binaries) device_streams/
+	$(lha) a $(lhaflags) device-streams.lha device_streams
+	rm -r device_streams
