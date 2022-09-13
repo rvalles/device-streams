@@ -118,10 +118,10 @@ int main(int argc, char **argv) {
     struct List *dl;
     FILE *file = NULL;
 
+    signal(SIGINT, SIG_IGN);
+
     mout = stdout;
     min = stdin;
-
-    signal(SIGINT, SIG_IGN);
 
     if (argc) {
         while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {

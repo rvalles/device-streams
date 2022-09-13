@@ -186,13 +186,6 @@ int main(int argc, char **argv) {
                 opt_debug = 1;
             }
         }
-        if (!opt_outfile_name) {
-            mout = fopen("*", "w+");
-            if (!mout) {
-                return (20);
-            }
-            file = stdout;
-        }
         if (opt_quiet && opt_expert) {
             message("--quiet-mode (-q) and --expert-mode (-x) not allowed at same time.\n");
             opt_quit = 1;
@@ -206,6 +199,13 @@ int main(int argc, char **argv) {
         }
         if (opt_quit) {
             return (ret);
+        }
+        if (!opt_outfile_name) {
+            mout = fopen("*", "w+");
+            if (!mout) {
+                return (20);
+            }
+            file = stdout;
         }
         /* there should be NO messages before this point!! */
         dl = get_drive_list();
