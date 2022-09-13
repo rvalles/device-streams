@@ -31,10 +31,11 @@ lint:
 .PHONY: clean
 clean:
 	@echo "* Removing build artifacts..."
-	rm -f $(binaries) *.o
-archive:
+	rm -f $(binaries) *.o devstreams.lha
+devstreams.lha: $(binaries)
 	@echo "* Archiving into lha..."
-	mkdir device_streams
-	cp -a $(binaries) device_streams/
-	$(lha) a $(lhaflags) device-streams.lha device_streams
-	rm -r device_streams
+	mkdir devstreams
+	cp -a $(binaries) devstreams/
+	$(lha) a $(lhaflags) $@ devstreams
+	rm -r devstreams
+	$(lha) v $@
