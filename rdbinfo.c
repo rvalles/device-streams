@@ -172,13 +172,6 @@ int main(int argc, char **argv) {
     return (ret);
 }
 
-int check_break(void) {
-    if (SIGBREAKF_CTRL_C & SetSignal(0, SIGBREAKF_CTRL_C)) {
-        return (1);
-    }
-    return (0);
-}
-
 void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
     struct Node *dn, *un, *pn;
     int ctrlc = 0;

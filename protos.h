@@ -82,6 +82,10 @@ void message(char *f, ...);
 void warn_message(char *f, ...);
 void vmessage(char *f, va_list ap);
 /* END: "util.c" */
+/* START: "common.c" */
+int check_values(Partition *p, ulong st, ulong end, int exp);
+int check_break(void);
+/* END: "common.c" */
 /* START: "system" */
 #include <clib/alib_protos.h>
 #include <clib/dos_protos.h>
