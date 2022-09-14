@@ -5,3 +5,4 @@ devtostream
 xdevtostream
 streamtodev
 xstreamtodev
+*.kate-swp
