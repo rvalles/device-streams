@@ -7,7 +7,7 @@ commonobj = util.o getdevices.o devices.o common.o
 size = $(sdkprefix)size
 CC = $(sdkprefix)gcc
 CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
-CFLAGS += -Wall
+CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -mcrt=$(crt)
 LDFLAGS += -mcrt=$(crt)
 .PHONY: all
