@@ -175,6 +175,7 @@ int main(int argc, char **argv) {
 void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
     struct Node *dn, *un, *pn;
     int ctrlc = 0;
+    unsigned long long bytes;
 
     /* walk list of devices. */
 
@@ -201,10 +202,9 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                             continue;
                         }
                         if (unit_printed == 0) {
-                            message("Device: \"%s\"  Unit: %ld  Capacity: "
-                                    "%ld.%ld Megs",
-                                    u->name, u->unit, megs(u->total_blocks * u->bytes_per_block),
-                                    tenths_of_a_meg(u->total_blocks * u->bytes_per_block));
+                            bytes = (unsigned long long)u->total_blocks * u->bytes_per_block;
+                            message("Device: \"%s\"  Unit: %ld  Capacity: %lld.%lld Megs", u->name, u->unit, megs(bytes),
+                                    tenths_of_a_meg(bytes));
                             message("DiskVendor: %.8s DiskProduct %.16s "
                                     "DiskRevision: %.4s",
                                     u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision);
@@ -215,10 +215,8 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                             message("Total Blocks: %ld  Block Size %ld", u->total_blocks, u->bytes_per_block);
                             unit_printed = 1;
                         }
-                        message("\n--| Partition: \"%s\" Capacity: %ld.%ld "
-                                "Megs",
-                                p->name, megs(p->total_blocks * p->block_size),
-                                tenths_of_a_meg(p->total_blocks * p->block_size));
+                        bytes = (unsigned long long)p->total_blocks * p->block_size;
+                        message("\n--| Partition: \"%s\" Capacity: %lld.%lld Megs", p->name, megs(bytes), tenths_of_a_meg(bytes));
                         message("--| Start Block: %ld  End Block: %ld "
                                 "Total Blocks: %ld",
                                 p->start_block, p->end_block, p->total_blocks);
