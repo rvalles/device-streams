@@ -17,9 +17,9 @@ streamtodev: streamtodev.o $(commonobj)
 xstreamtodev: xstreamtodev.o $(commonobj)
 devtostream: devtostream.o $(commonobj)
 xdevtostream: xdevtostream.o $(commonobj)
-xstreamtodev.o: streamtodev.c
+xstreamtodev.o: streamtodev.c $(commonobj)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
-xdevtostream.o: devtostream.c
+xdevtostream.o: devtostream.c $(commonobj)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
 .PHONY: size
 size: $(binaries)
