@@ -22,7 +22,7 @@ xstreamtodev.o: streamtodev.c
 xdevtostream.o: devtostream.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
 .PHONY: size
-size:
+size: $(binaries)
 	$(size) $(binaries)
 .PHONY: lint
 lint:
