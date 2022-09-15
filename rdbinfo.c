@@ -191,42 +191,38 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                     /* walk list of partitions. */
                     for (pn = u->parts.lh_Head; (!ctrlc) && pn->ln_Succ; ctrlc = check_break(), pn = pn->ln_Succ) {
                         Partition *p = ptrfrom(Partition, node, pn);
-                        int do_it = 1;
-
                         if (part_name && strcasecmp(p->name, part_name)) {
-                            do_it = 0;
+                            continue;
                         }
                         if (start_block != (ulong)-1 && start_block != p->start_block) {
-                            do_it = 0;
+                            continue;
                         }
                         if (end_block != (ulong)-1 && end_block != p->end_block) {
-                            do_it = 0;
+                            continue;
                         }
-                        if (do_it) {
-                            if (unit_printed == 0) {
-                                message("Device: \"%s\"  Unit: %ld  Capacity: "
-                                        "%ld.%ld Megs",
-                                        u->name, u->unit, megs(u->total_blocks * u->bytes_per_block),
-                                        tenths_of_a_meg(u->total_blocks * u->bytes_per_block));
-                                message("DiskVendor: %.8s DiskProduct %.16s "
-                                        "DiskRevision: %.4s",
-                                        u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision);
-                                message("Cylinders: %ld  Heads: %ld  "
-                                        "Blks-p-Trk: %ld "
-                                        "[Blks-p-Cyl: %ld]",
-                                        u->cylinders, u->heads, u->blocks_per_track, u->heads * u->blocks_per_track);
-                                message("Total Blocks: %ld  Block Size %ld", u->total_blocks, u->bytes_per_block);
-                                unit_printed = 1;
-                            }
-                            message("\n--| Partition: \"%s\" Capacity: %ld.%ld "
-                                    "Megs",
-                                    p->name, megs(p->total_blocks * p->block_size),
-                                    tenths_of_a_meg(p->total_blocks * p->block_size));
-                            message("--| Start Block: %ld  End Block: %ld "
-                                    "Total Blocks: %ld",
-                                    p->start_block, p->end_block, p->total_blocks);
-                            message("--| Block Size: %ld", p->block_size);
+                        if (unit_printed == 0) {
+                            message("Device: \"%s\"  Unit: %ld  Capacity: "
+                                    "%ld.%ld Megs",
+                                    u->name, u->unit, megs(u->total_blocks * u->bytes_per_block),
+                                    tenths_of_a_meg(u->total_blocks * u->bytes_per_block));
+                            message("DiskVendor: %.8s DiskProduct %.16s "
+                                    "DiskRevision: %.4s",
+                                    u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision);
+                            message("Cylinders: %ld  Heads: %ld  "
+                                    "Blks-p-Trk: %ld "
+                                    "[Blks-p-Cyl: %ld]",
+                                    u->cylinders, u->heads, u->blocks_per_track, u->heads * u->blocks_per_track);
+                            message("Total Blocks: %ld  Block Size %ld", u->total_blocks, u->bytes_per_block);
+                            unit_printed = 1;
                         }
+                        message("\n--| Partition: \"%s\" Capacity: %ld.%ld "
+                                "Megs",
+                                p->name, megs(p->total_blocks * p->block_size),
+                                tenths_of_a_meg(p->total_blocks * p->block_size));
+                        message("--| Start Block: %ld  End Block: %ld "
+                                "Total Blocks: %ld",
+                                p->start_block, p->end_block, p->total_blocks);
+                        message("--| Block Size: %ld", p->block_size);
                     }
                     if (unit_printed) {
                         message("###");
