@@ -213,6 +213,8 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                                     "[Blks-p-Cyl: %ld]",
                                     u->cylinders, u->heads, u->blocks_per_track, u->heads * u->blocks_per_track);
                             message("Total Blocks: %ld  Block Size %ld", u->total_blocks, u->bytes_per_block);
+                            if (bytes >= 1ULL << 32)
+                                message("64bit");
                             unit_printed = 1;
                         }
                         bytes = (unsigned long long)p->total_blocks * p->block_size;
@@ -221,6 +223,8 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                                 "Total Blocks: %ld",
                                 p->start_block, p->end_block, p->total_blocks);
                         message("--| Block Size: %ld", p->block_size);
+                        if (bytes >= 1ULL << 32 || (unsigned long long)p->block_size * p->end_block >= 1ULL << 32)
+                            message("--| 64bit");
                     }
                     if (unit_printed) {
                         message("###");
