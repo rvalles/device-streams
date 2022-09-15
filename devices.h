@@ -33,6 +33,24 @@
 #include <exec/io.h>
 #include <exec/ports.h>
 
+// TD64/Trackdisk64
+#define io_HighOffset io_Actual
+#define TD_READ64 24
+#define TD_WRITE64 25
+#define TD_SEEK64 26
+#define TD_FORMAT64 27
+// NSD
+#define NSCMD_DEVICEQUERY 0x4000
+#define NSCMD_TD_READ64 0xC000
+#define NSCMD_TD_WRITE64 0xC001
+#define NSCMD_TD_SEEK64 0xC002
+#define NSCMD_TD_FORMAT64 0xC003
+// 64bit device support level
+#define DEVICE_LEVEL_UNKNOWN 0
+#define DEVICE_LEVEL_32BIT 1
+#define DEVICE_LEVEL_NSD 2
+#define DEVICE_LEVEL_TD64 3
+
 DeviceData *init_device(char *name, ulong unit, ulong flags, ulong iosize);
 int open_device(DeviceData *dd);
 void close_device(DeviceData *dd);
