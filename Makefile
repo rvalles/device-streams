@@ -10,6 +10,7 @@ CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
 CFLAGS += -std=c99
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -mcrt=$(crt)
+CFLAGS += -D DEBUG_ENABLED_VERSION=1
 LDFLAGS += -mcrt=$(crt)
 .PHONY: all
 all: $(binaries) size
