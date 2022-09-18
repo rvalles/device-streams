@@ -13,6 +13,8 @@ CFLAGS += -mcrt=$(crt)
 LDFLAGS += -mcrt=$(crt)
 .PHONY: all
 all: $(binaries) size
+%.o: %.c *.h
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 rdbinfo: rdbinfo.o $(commonobj)
 streamtodev: streamtodev.o $(commonobj)
 xstreamtodev: xstreamtodev.o $(commonobj)
