@@ -28,6 +28,7 @@
 
 #include "devices.h"
 #include "util.h"
+#include <stdbool.h>
 
 /* returns structure with device open. */
 DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
@@ -100,29 +101,26 @@ void close_device(DeviceData *dd) {
     }
 }
 
-/* returns actual number of bytes written or -1 for error. */
-ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
+/* returns actual number of bytes read or written, or -1 for error. */
+ulong device_readwrite(DeviceData *dd, ulong offset, ulong bytes, void *buffer, bool write) {
     struct IOStdReq *io = (struct IOStdReq *)dd->io;
     io->io_Length = bytes;
     io->io_Offset = offset;
     io->io_Data = buffer;
-
-    if (!device_do_command(dd, CMD_READ)) {
+    if (!device_do_command(dd, write ? CMD_WRITE : CMD_READ)) {
         return (io->io_Actual);
     }
     return (-1);
 }
 
+/* returns actual number of bytes read or -1 for error. */
+ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
+    return device_readwrite(dd, offset, bytes, buffer, false);
+}
+
 /* returns actual number of bytes written or -1 for error. */
 ulong device_write(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
-    struct IOStdReq *io = (struct IOStdReq *)dd->io;
-    io->io_Length = bytes;
-    io->io_Offset = offset;
-    io->io_Data = buffer;
-    if (!device_do_command(dd, CMD_WRITE)) {
-        return (io->io_Actual);
-    }
-    return (-1);
+    return device_readwrite(dd, offset, bytes, buffer, true);
 }
 
 /* returns the error from DoIO () */
