@@ -102,7 +102,7 @@ ulong opt_verbose;
 ulong opt_expert;
 ulong opt_debug;
 ulong opt_quiet = 0;
-ulong number_of_buffer_blocks = 100;
+ulong number_of_buffer_blocks = 128;
 
 FILE *mout;
 FILE *min;
