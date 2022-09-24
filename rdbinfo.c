@@ -203,7 +203,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                         }
                         if (unit_printed == 0) {
                             bytes = (unsigned long long)u->total_blocks * u->bytes_per_block;
-                            message("Device: \"%s\"  Unit: %ld  Capacity: %lld.%lld Megs", u->name, u->unit, megs(bytes),
+                            message("Device: \"%s\"  Unit: %ld  Capacity: %llu.%llu Megs", u->name, u->unit, megs(bytes),
                                     tenths_of_a_meg(bytes));
                             message("DiskVendor: %.8s DiskProduct %.16s "
                                     "DiskRevision: %.4s",
@@ -218,7 +218,7 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                             unit_printed = 1;
                         }
                         bytes = (unsigned long long)p->total_blocks * p->block_size;
-                        message("\n--| Partition: \"%s\" Capacity: %lld.%lld Megs", p->name, megs(bytes), tenths_of_a_meg(bytes));
+                        message("\n--| Partition: \"%s\" Capacity: %llu.%llu Megs", p->name, megs(bytes), tenths_of_a_meg(bytes));
                         message("--| Start Block: %ld  End Block: %ld "
                                 "Total Blocks: %ld",
                                 p->start_block, p->end_block, p->total_blocks);
