@@ -325,7 +325,7 @@ void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                             ((btw + bw) * 100 / total_blocks));
                     fflush(mout);
                 }
-                if (bpb * btw != device_write(dd, cb * bpb, btw * bpb, buffer)) {
+                if (bpb * btw != device_write(dd, (unsigned long long)cb * bpb, btw * bpb, buffer)) {
                     fprintf(mout, "\n");
                     warn_message("couldn't complete operation, write failed.");
                     break;

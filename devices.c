@@ -102,10 +102,15 @@ void close_device(DeviceData *dd) {
 }
 
 /* returns actual number of bytes read or written, or -1 for error. */
-ulong device_readwrite(DeviceData *dd, ulong offset, ulong bytes, void *buffer, bool write) {
+ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer, bool write) {
+    D(debug_message("dd %lu, Offset: 0x%llX, bytes: %lu, buffer: %lu", dd, offset, bytes, buffer));
+    if (offset >= 1ULL << 32 || offset + bytes - 1 >= 1ULL << 32) {
+        warn_message("64bit I/O request w/o support. Skip and return error.");
+        return (-1);
+    }
     struct IOStdReq *io = (struct IOStdReq *)dd->io;
     io->io_Length = bytes;
-    io->io_Offset = offset;
+    io->io_Offset = offset; // 32bit. Gets the lower half of offset.
     io->io_Data = buffer;
     if (!device_do_command(dd, write ? CMD_WRITE : CMD_READ)) {
         return (io->io_Actual);
@@ -114,12 +119,12 @@ ulong device_readwrite(DeviceData *dd, ulong offset, ulong bytes, void *buffer, 
 }
 
 /* returns actual number of bytes read or -1 for error. */
-ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
+ulong device_read(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer) {
     return device_readwrite(dd, offset, bytes, buffer, false);
 }
 
 /* returns actual number of bytes written or -1 for error. */
-ulong device_write(DeviceData *dd, ulong offset, ulong bytes, void *buffer) {
+ulong device_write(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer) {
     return device_readwrite(dd, offset, bytes, buffer, true);
 }
 

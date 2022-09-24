@@ -59,8 +59,8 @@ DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize);
 void free_device(DeviceData *dd);
 int open_device(DeviceData *dd);
 void close_device(DeviceData *dd);
-ulong device_read(DeviceData *dd, ulong offset, ulong bytes, void *buffer);
-ulong device_write(DeviceData *dd, ulong offset, ulong bytes, void *buffer);
+ulong device_read(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer);
+ulong device_write(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer);
 int device_do_command(DeviceData *dd, UWORD command);
 /* END: "devices.c" */
 /* START: "util.c" */

@@ -185,7 +185,7 @@ void do_unit(struct device *dev, DeviceData *dd) {
         }
         /* scans the first 200 blocks for the RDB root. */
         for (i = 0; i < 200; i++) {
-            if (512 != device_read(dd, 512 * i, 512, u->rdb)) {
+            if (512 != device_read(dd, (unsigned long long)i * 512, 512, u->rdb)) {
                 verbose_message("warn: unable to read \"%s\" unit: %ld flags 0x%lx", dd->name, dd->unit, dd->flags);
                 free_unit(u);
                 return;
@@ -241,7 +241,7 @@ void get_partitions(DeviceData *dd, Unit *u) {
         while (partblock != (ulong)~0) {
             ulong nextpartblock = (ulong)~0;
 
-            if (bpb != device_read(dd, bpb * partblock, bpb, pb)) {
+            if (bpb != device_read(dd, (unsigned long long)partblock * bpb, bpb, pb)) {
                 verbose_message("warn: unable to read block: %ld from \"%s\" unit: %ld flags 0x%lx", partblock, dd->name, dd->unit,
                                 dd->flags);
                 break;

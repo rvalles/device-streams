@@ -295,7 +295,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                             ((bw + (num_buffers / 2)) * 100 / total_blocks));
                     fflush(mout);
                 }
-                if (bpb * num_buffers != device_read(dd, cb * bpb, num_buffers * bpb, buffer)) {
+                if (bpb * num_buffers != device_read(dd, (unsigned long long)cb * bpb, num_buffers * bpb, buffer)) {
                     fprintf(mout, "\n");
                     warn_message("couldn't complete operation, read failed.");
                     break;
