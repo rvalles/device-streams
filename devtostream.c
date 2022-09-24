@@ -223,9 +223,9 @@ int main(int argc, char **argv) {
                             message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
                                     megs((unsigned long long)p->total_blocks * p->block_size),
                                     tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
-                            message("start block: %ld  end block: %ld total blocks: %ld", p->start_block, p->end_block,
+                            message("start block: %lu  end block: %lu total blocks: %lu", p->start_block, p->end_block,
                                     p->total_blocks);
-                            message("block Size: %ld", p->block_size);
+                            message("block Size: %lu", p->block_size);
                         }
                         st = opt_start_block;
                         end = opt_end_block;
@@ -238,7 +238,7 @@ int main(int argc, char **argv) {
                         if (check_values(p, st, end, opt_expert)) {
                             int do_it = 0; /* default do not. */
                             if (!opt_quiet) {
-                                message("dumping: start block: %ld to end block: %ld [size: %lluK]\n", st, end,
+                                message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
                                         ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
                                 def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
                                                opt_outfile_name ? opt_outfile_name : "stdout");
@@ -293,7 +293,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                 }
                 /* Read from device. */
                 if (!opt_quiet) {
-                    fprintf(mout, "reading: %08ld -> %08ld  [%3ld%%] \r", cb, cb + num_buffers - 1,
+                    fprintf(mout, "reading: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1,
                             ((bw + (num_buffers / 2)) * 100 / total_blocks));
                     fflush(mout);
                 }
@@ -306,7 +306,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                 /* Write to file. */
                 bw += num_buffers;
                 if (!opt_quiet) {
-                    fprintf(mout, "writing: %08ld -> %08ld  [%3ld%%] \r", cb, cb + num_buffers - 1, (bw * 100 / total_blocks));
+                    fprintf(mout, "writing: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1, (bw * 100 / total_blocks));
                     fflush(mout);
                 }
                 if (num_buffers != fwrite(buffer, bpb, num_buffers, file)) {
@@ -323,6 +323,6 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
         }
         free_device(dd);
     } else {
-        warn_message("couldn't open device \"%s\" unit: %ld for operation.", name, unit);
+        warn_message("couldn't open device \"%s\" unit: %lu for operation.", name, unit);
     }
 }

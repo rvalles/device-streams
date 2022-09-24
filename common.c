@@ -2,7 +2,7 @@
 
 int check_values(Partition *p, ulong st, ulong end, int exp) {
     if (st > end) {
-        message("error: Your end block [%ld] is less than your start block [%ld]!\n", st, end);
+        message("error: Your end block [%lu] is less than your start block [%lu]!\n", st, end);
         return (0);
     }
     if (st < p->start_block || st > p->end_block || end > p->end_block || end < p->start_block) {

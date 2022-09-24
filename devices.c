@@ -79,7 +79,7 @@ int open_device(DeviceData *dd) {
             dd->open = 1;
         } else {
             if (-1 != error) {
-                D(debug_message("warn: unable to open \"%s\" unit: %ld flags 0x%lx", dd->name, dd->unit, dd->flags));
+                D(debug_message("warn: unable to open \"%s\" unit: %lu flags 0x%lx", dd->name, dd->unit, dd->flags));
                 D(debug_message("      reason: error %ld", error));
             }
             dd->open = 0;

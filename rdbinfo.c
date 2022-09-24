@@ -203,26 +203,26 @@ void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulon
                         }
                         if (unit_printed == 0) {
                             bytes = (unsigned long long)u->total_blocks * u->bytes_per_block;
-                            message("Device: \"%s\"  Unit: %ld  Capacity: %llu.%llu Megs", u->name, u->unit, megs(bytes),
+                            message("Device: \"%s\"  Unit: %lu  Capacity: %llu.%llu Megs", u->name, u->unit, megs(bytes),
                                     tenths_of_a_meg(bytes));
                             message("DiskVendor: %.8s DiskProduct %.16s "
                                     "DiskRevision: %.4s",
                                     u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision);
-                            message("Cylinders: %ld  Heads: %ld  "
-                                    "Blks-p-Trk: %ld "
-                                    "[Blks-p-Cyl: %ld]",
+                            message("Cylinders: %lu  Heads: %lu  "
+                                    "Blks-p-Trk: %lu "
+                                    "[Blks-p-Cyl: %lu]",
                                     u->cylinders, u->heads, u->blocks_per_track, u->heads * u->blocks_per_track);
-                            message("Total Blocks: %ld  Block Size %ld", u->total_blocks, u->bytes_per_block);
+                            message("Total Blocks: %lu  Block Size %lu", u->total_blocks, u->bytes_per_block);
                             if (bytes >= 1ULL << 32)
                                 message("64bit");
                             unit_printed = 1;
                         }
                         bytes = (unsigned long long)p->total_blocks * p->block_size;
                         message("\n--| Partition: \"%s\" Capacity: %llu.%llu Megs", p->name, megs(bytes), tenths_of_a_meg(bytes));
-                        message("--| Start Block: %ld  End Block: %ld "
-                                "Total Blocks: %ld",
+                        message("--| Start Block: %lu  End Block: %lu "
+                                "Total Blocks: %lu",
                                 p->start_block, p->end_block, p->total_blocks);
-                        message("--| Block Size: %ld", p->block_size);
+                        message("--| Block Size: %lu", p->block_size);
                         if (bytes >= 1ULL << 32 || (unsigned long long)p->block_size * p->end_block >= 1ULL << 32)
                             message("--| 64bit");
                     }

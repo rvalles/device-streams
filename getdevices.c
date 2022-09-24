@@ -186,7 +186,7 @@ void do_unit(struct device *dev, DeviceData *dd) {
         /* scans the first 200 blocks for the RDB root. */
         for (i = 0; i < 200; i++) {
             if (512 != device_read(dd, (unsigned long long)i * 512, 512, u->rdb)) {
-                verbose_message("warn: unable to read \"%s\" unit: %ld flags 0x%lx", dd->name, dd->unit, dd->flags);
+                verbose_message("warn: unable to read \"%s\" unit: %lu flags 0x%lx", dd->name, dd->unit, dd->flags);
                 free_unit(u);
                 return;
             }
@@ -199,7 +199,7 @@ void do_unit(struct device *dev, DeviceData *dd) {
                     u->bytes_per_block = u->rdb->rdb_BlockBytes;
                     u->total_blocks = u->cylinders * u->heads * u->blocks_per_track;
                     verbose_message("found drive %.8s %.16s %.4s [capacity:%lluM]"
-                                    "\n at unit %ld on device \"%s\"",
+                                    "\n at unit %lu on device \"%s\"",
                                     u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision,
                                     (unsigned long long)u->total_blocks * u->bytes_per_block / (1024 * 1024), u->unit, u->name);
                     if (u->rdb->rdb_PartitionList != (ulong)~0) {
@@ -208,13 +208,13 @@ void do_unit(struct device *dev, DeviceData *dd) {
                     AddTail(&dev->units, &u->node);
                     break;
                 } else {
-                    warn_message("found RDB at %ld on unit %ld of \"%s\", failed checksum", i, u->unit, u->name);
+                    warn_message("found RDB at %ld on unit %lu of \"%s\", failed checksum", i, u->unit, u->name);
                     break;
                 }
             }
         }
         if (u->rdb_at == (ulong)-1L) {
-            verbose_message("\"%s\" at unit: %ld has no RDB.", u->name, u->unit);
+            verbose_message("\"%s\" at unit: %lu has no RDB.", u->name, u->unit);
             free_unit(u);
             return;
         }
@@ -242,7 +242,7 @@ void get_partitions(DeviceData *dd, Unit *u) {
             ulong nextpartblock = (ulong)~0;
 
             if (bpb != device_read(dd, (unsigned long long)partblock * bpb, bpb, pb)) {
-                verbose_message("warn: unable to read block: %ld from \"%s\" unit: %ld flags 0x%lx", partblock, dd->name, dd->unit,
+                verbose_message("warn: unable to read block: %lu from \"%s\" unit: %lu flags 0x%lx", partblock, dd->name, dd->unit,
                                 dd->flags);
                 break;
             }
@@ -266,9 +266,9 @@ void get_partitions(DeviceData *dd, Unit *u) {
                             p->block_size = e[DE_SIZEBLOCK] << 2;
 
                             /* the size stuff is convoluted to avoid overflow. */
-                            verbose_message("| partition: \"%s\" sb: %ld eb: %ld totb: %ld", p->name, p->start_block, p->end_block,
+                            verbose_message("| partition: \"%s\" sb: %lu eb: %lu totb: %lu", p->name, p->start_block, p->end_block,
                                             p->total_blocks);
-                            verbose_message("|            Block Size: %ld Capacity: %llu.%llu", p->block_size,
+                            verbose_message("|            Block Size: %lu Capacity: %llu.%llu", p->block_size,
                                             megs((unsigned long long)p->total_blocks * p->block_size),
                                             tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
 
@@ -279,13 +279,13 @@ void get_partitions(DeviceData *dd, Unit *u) {
                             warn_message("failed to allocate memory for partition");
                         }
                     } else {
-                        warn_message("found PART at %ld on unit %ld of\"%s\",\n      tablesize to small", partblock, u->unit,
+                        warn_message("found PART at %lu on unit %lu of\"%s\",\n      tablesize to small", partblock, u->unit,
                                      u->name);
                         break;
                     }
 
                 } else {
-                    warn_message("found PART at %ld on unit %ld of \"%s\", failed checksum", partblock, u->unit, u->name);
+                    warn_message("found PART at %lu on unit %lu of \"%s\", failed checksum", partblock, u->unit, u->name);
                     break;
                 }
             }
