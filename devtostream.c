@@ -293,7 +293,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                 }
                 /* Read from device. */
                 if (!opt_quiet) {
-                    fprintf(mout, "reading: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1,
+                    fprintf(mout, "reading: 0x%08lx -> 0x%08lx  [%3lu%%] \r", cb, cb + num_buffers - 1,
                             ((bw + (num_buffers / 2)) * 100 / total_blocks));
                     fflush(mout);
                 }
@@ -306,7 +306,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                 /* Write to file. */
                 bw += num_buffers;
                 if (!opt_quiet) {
-                    fprintf(mout, "writing: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1, (bw * 100 / total_blocks));
+                    fprintf(mout, "writing: 0x%08lx -> 0x%08lx  [%3lu%%] \r", cb, cb + num_buffers - 1, (bw * 100 / total_blocks));
                     fflush(mout);
                 }
                 if (num_buffers != fwrite(buffer, bpb, num_buffers, file)) {

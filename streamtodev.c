@@ -288,7 +288,7 @@ void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
             while (cb <= end && !last_write) {
                 /* read from file. */
                 if (!opt_quiet) {
-                    fprintf(mout, "reading: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1,
+                    fprintf(mout, "reading: 0x%08lx -> 0x%08lx  [%3lu%%] \r", cb, cb + num_buffers - 1,
                             ((bw + (num_buffers / 2)) * 100 / total_blocks));
                     fflush(mout);
                 }
@@ -322,7 +322,7 @@ void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                     last_write = 1;
                 }
                 if (!opt_quiet) {
-                    fprintf(mout, "writing: %08lu -> %08lu  [%3lu%%] \r", cb, cb + num_buffers - 1,
+                    fprintf(mout, "writing: 0x%08lx -> 0x%08lx  [%3lu%%] \r", cb, cb + num_buffers - 1,
                             ((btw + bw) * 100 / total_blocks));
                     fflush(mout);
                 }
