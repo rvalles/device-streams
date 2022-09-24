@@ -172,7 +172,7 @@ ulong checksum(ulong sl, ulong *buf) {
 void do_unit(struct device *dev, DeviceData *dd) {
     Unit *u = zmalloc(sizeof(*u));
     if (u) {
-        int i;
+        ulong i;
         u->name = dev->name;
         NewList(&u->parts);
         u->unit = dd->unit;
@@ -208,7 +208,7 @@ void do_unit(struct device *dev, DeviceData *dd) {
                     AddTail(&dev->units, &u->node);
                     break;
                 } else {
-                    warn_message("found RDB at %ld on unit %lu of \"%s\", failed checksum", i, u->unit, u->name);
+                    warn_message("found RDB at %lu on unit %lu of \"%s\", failed checksum", i, u->unit, u->name);
                     break;
                 }
             }
