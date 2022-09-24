@@ -245,6 +245,7 @@ int main(int argc, char **argv) {
                                     do_it = 1;
                                 }
                             } else {
+                                /* in quiet mode we always work. */
                                 do_it = 1;
                             }
                             if (do_it) {
