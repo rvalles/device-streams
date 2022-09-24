@@ -198,10 +198,10 @@ void do_unit(struct device *dev, DeviceData *dd) {
                     u->blocks_per_track = u->rdb->rdb_Sectors;
                     u->bytes_per_block = u->rdb->rdb_BlockBytes;
                     u->total_blocks = u->cylinders * u->heads * u->blocks_per_track;
-                    verbose_message("found drive %.8s %.16s %.4s [capacity:%ldM]"
+                    verbose_message("found drive %.8s %.16s %.4s [capacity:%lluM]"
                                     "\n at unit %ld on device \"%s\"",
                                     u->rdb->rdb_DiskVendor, u->rdb->rdb_DiskProduct, u->rdb->rdb_DiskRevision,
-                                    (u->total_blocks * u->bytes_per_block) / (1024 * 1024), u->unit, u->name);
+                                    (unsigned long long)u->total_blocks * u->bytes_per_block / (1024 * 1024), u->unit, u->name);
                     if (u->rdb->rdb_PartitionList != (ulong)~0) {
                         get_partitions(dd, u);
                     }
@@ -268,9 +268,9 @@ void get_partitions(DeviceData *dd, Unit *u) {
                             /* the size stuff is convoluted to avoid overflow. */
                             verbose_message("| partition: \"%s\" sb: %ld eb: %ld totb: %ld", p->name, p->start_block, p->end_block,
                                             p->total_blocks);
-                            verbose_message("|            Block Size: %ld Capacity: %ld.%ldM", p->block_size,
-                                            (p->block_size * p->total_blocks) / (1024 * 1024),
-                                            (10 * ((p->block_size * p->total_blocks) / (1024) % 1024)) / 1024);
+                            verbose_message("|            Block Size: %ld Capacity: %llu.%llu", p->block_size,
+                                            megs((unsigned long long)p->total_blocks * p->block_size),
+                                            tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
 
                             nextpartblock = pb->pb_Next;
                             p->unit = u;
