@@ -1,6 +1,8 @@
 lintstyle = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
 crt = nix20
+# crt = nix13
+# crt = clib2
 lha = lha
 binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 commonobj = util.o getdevices.o devices.o common.o
