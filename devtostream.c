@@ -220,8 +220,9 @@ int main(int argc, char **argv) {
                         int def = 'N';
                         ulong st, end;
                         if (!opt_quiet) {
-                            message("found partition: \"%s\" capacity: %ld.%ld Megs", p->name,
-                                    megs(p->total_blocks * p->block_size), tenths_of_a_meg(p->total_blocks * p->block_size));
+                            message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
+                                    megs((unsigned long long)p->total_blocks * p->block_size),
+                                    tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
                             message("start block: %ld  end block: %ld total blocks: %ld", p->start_block, p->end_block,
                                     p->total_blocks);
                             message("block Size: %ld", p->block_size);
@@ -237,8 +238,8 @@ int main(int argc, char **argv) {
                         if (check_values(p, st, end, opt_expert)) {
                             int do_it = 0; /* default do not. */
                             if (!opt_quiet) {
-                                message("dumping: start block: %ld to end block: %ld [size: %ldK]\n", st, end,
-                                        ((end - st) * p->unit->bytes_per_block) / 1024);
+                                message("dumping: start block: %ld to end block: %ld [size: %lluK]\n", st, end,
+                                        ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
                                 def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
                                                opt_outfile_name ? opt_outfile_name : "stdout");
                                 if (tolower(def) == 'y') {
