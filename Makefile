@@ -45,3 +45,5 @@ devstreams.lha: $(binaries)
 	$(lha) a $(lhaflags) $@ devstreams
 	rm -r devstreams
 	$(lha) v $@
+.PHONY: dist
+dist: devstreams.lha
