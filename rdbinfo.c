@@ -60,8 +60,8 @@ struct option long_options[] = {{"rdb-name", required_argument, NULL, 'n'},
                                 {NULL, 0, NULL, 0}};
 char *short_options = "?vVxghn:s:e:d:u:";
 
-char *cmd_vers_string = "\0$VERS rdbinfo 1.0 (93.10.10)";
-char *version_string = "rdbinfo V1.0 -- Copyright 1993 Christian E. Hopps\n";
+char *cmd_vers_string = "\0$VERS rdbinfo 1.99 (dev)";
+char *version_string = "rdbinfo V1.99-dev -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
 
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"

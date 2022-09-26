@@ -71,8 +71,8 @@ char *short_options = "?qvVhn:d:u:b:o:"
 #endif
     ;
 
-char *cmd_vers_string = "\0$VERS devtostream 1.0 (93.10.10)";
-char *version_string = "devtostream V1.0 -- Copyright 1993 Christian E. Hopps\n";
+char *cmd_vers_string = "\0$VERS devtostream 1.99 (dev)";
+char *version_string = "devtostream V1.99-dev -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
 
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
