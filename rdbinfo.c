@@ -104,70 +104,70 @@ int main(int argc, char **argv) {
     mout = stdout;
     min = stdin;
 
-    if (argc) {
-        struct List *dl;
-        while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {
-            switch (opt) {
-            case 'v':
-                opt_version = 1;
+    if (!argc)
+        return (ret);
+    struct List *dl;
+    while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {
+        switch (opt) {
+        case 'v':
+            opt_version = 1;
+            opt_quit = 1;
+            break;
+        case 'V':
+            opt_verbose = 1;
+            break;
+        case 'x':
+            opt_expert = 1;
+            break;
+        case '?':
+        case 'h':
+            opt_help = 1;
+            opt_quit = 1;
+            break;
+        case 'n':
+            opt_rdb_name = optarg;
+            break;
+        case 'd':
+            opt_device_name = optarg;
+            break;
+        case 's':
+            if (!(string_to_number(optarg, &opt_start_block))) {
                 opt_quit = 1;
-                break;
-            case 'V':
-                opt_verbose = 1;
-                break;
-            case 'x':
-                opt_expert = 1;
-                break;
-            case '?':
-            case 'h':
                 opt_help = 1;
-                opt_quit = 1;
-                break;
-            case 'n':
-                opt_rdb_name = optarg;
-                break;
-            case 'd':
-                opt_device_name = optarg;
-                break;
-            case 's':
-                if (!(string_to_number(optarg, &opt_start_block))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-            case 'e':
-                if (!(string_to_number(optarg, &opt_end_block))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-            case 'u':
-                if (!(string_to_number(optarg, &opt_unit))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-            case 'g':
-                opt_debug = 1;
+                ret = 20;
             }
+            break;
+        case 'e':
+            if (!(string_to_number(optarg, &opt_end_block))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
+            }
+            break;
+        case 'u':
+            if (!(string_to_number(optarg, &opt_unit))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
+            }
+            break;
+        case 'g':
+            opt_debug = 1;
         }
-        if (opt_version) {
-            message(version_string, argv[0]);
-        }
-        if (opt_help) {
-            message(help_string, argv[0], short_options, 2 + strlen(argv[0]), "", 2 + strlen(argv[0]), "", 2 + strlen(argv[0]), "");
-        }
-        if (opt_quit) {
-            return (ret);
-        }
-        dl = get_drive_list();
-        if (dl) {
-            get_info(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
-            free_drive_list(dl);
-        }
+    }
+    if (opt_version) {
+        message(version_string, argv[0]);
+    }
+    if (opt_help) {
+        message(help_string, argv[0], short_options, 2 + strlen(argv[0]), "", 2 + strlen(argv[0]), "", 2 + strlen(argv[0]), "");
+    }
+    if (opt_quit) {
+        return (ret);
+    }
+    dl = get_drive_list();
+    if (dl) {
+        get_info(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
+        free_drive_list(dl);
     }
     return (ret);
 }

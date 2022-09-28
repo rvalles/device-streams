@@ -122,155 +122,155 @@ int main(int argc, char **argv) {
     mout = stdout;
     min = stdin;
 
-    if (argc) {
-        while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {
-            switch (opt) {
-            case 'q':
-                opt_quiet = 1;
-                break;
-            case 'v':
-                opt_version = 1;
-                opt_quit = 1;
-                break;
-            case 'V':
-                opt_verbose = 1;
-                break;
-            case '?':
-            case 'h':
-                opt_help = 1;
-                opt_quit = 1;
-                break;
-            case 'n':
-                opt_rdb_name = optarg;
-                break;
-            case 'd':
-                opt_device_name = optarg;
-                break;
-            case 'o':
-                opt_outfile_name = optarg;
-                break;
-            case 'b':
-                if (!(string_to_number(optarg, &number_of_buffer_blocks))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-#if defined(EXPERT_VERSION)
-            case 'x':
-                opt_expert = 1;
-                break;
-            case 's':
-                if (!(string_to_number(optarg, &opt_start_block))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-            case 'e':
-                if (!(string_to_number(optarg, &opt_end_block))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-#endif /* EXPERT_VERSION */
-            case 'u':
-                if (!(string_to_number(optarg, &opt_unit))) {
-                    opt_quit = 1;
-                    opt_help = 1;
-                    ret = 20;
-                }
-                break;
-            case 'g':
-                opt_debug = 1;
-            }
-        }
-        if (opt_quiet && opt_expert) {
-            message("--quiet-mode (-q) and --expert-mode (-x) not allowed at same time.\n");
+    if (!argc)
+        return 0;
+    while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {
+        switch (opt) {
+        case 'q':
+            opt_quiet = 1;
+            break;
+        case 'v':
+            opt_version = 1;
             opt_quit = 1;
-            ret = 20;
-        }
-        if (opt_version) {
-            message(version_string, argv[0]);
-        }
-        if (opt_help) {
-            message(help_string, argv[0]);
-        }
-        if (opt_quit) {
-            return (ret);
-        }
-        if (!opt_outfile_name) {
-            mout = fopen("*", "w+");
-            if (!mout) {
-                return (20);
+            break;
+        case 'V':
+            opt_verbose = 1;
+            break;
+        case '?':
+        case 'h':
+            opt_help = 1;
+            opt_quit = 1;
+            break;
+        case 'n':
+            opt_rdb_name = optarg;
+            break;
+        case 'd':
+            opt_device_name = optarg;
+            break;
+        case 'o':
+            opt_outfile_name = optarg;
+            break;
+        case 'b':
+            if (!(string_to_number(optarg, &number_of_buffer_blocks))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
             }
-            file = Output();
+            break;
+#if defined(EXPERT_VERSION)
+        case 'x':
+            opt_expert = 1;
+            break;
+        case 's':
+            if (!(string_to_number(optarg, &opt_start_block))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
+            }
+            break;
+        case 'e':
+            if (!(string_to_number(optarg, &opt_end_block))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
+            }
+            break;
+#endif /* EXPERT_VERSION */
+        case 'u':
+            if (!(string_to_number(optarg, &opt_unit))) {
+                opt_quit = 1;
+                opt_help = 1;
+                ret = 20;
+            }
+            break;
+        case 'g':
+            opt_debug = 1;
         }
-        /* there should be NO messages before this point!! */
-        dl = get_drive_list();
-        if (dl) {
-            Partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
-            if (p) {
-                if (opt_outfile_name) {
-                    file = Open((unsigned char *)opt_outfile_name, MODE_NEWFILE);
-                }
-                if (file) {
-                    if (!isatty(file)) {
-                        int def = 'N';
-                        ulong st, end;
+    }
+    if (opt_quiet && opt_expert) {
+        message("--quiet-mode (-q) and --expert-mode (-x) not allowed at same time.\n");
+        opt_quit = 1;
+        ret = 20;
+    }
+    if (opt_version) {
+        message(version_string, argv[0]);
+    }
+    if (opt_help) {
+        message(help_string, argv[0]);
+    }
+    if (opt_quit) {
+        return (ret);
+    }
+    if (!opt_outfile_name) {
+        mout = fopen("*", "w+");
+        if (!mout) {
+            return (20);
+        }
+        file = Output();
+    }
+    /* there should be NO messages before this point!! */
+    dl = get_drive_list();
+    if (dl) {
+        Partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
+        if (p) {
+            if (opt_outfile_name) {
+                file = Open((unsigned char *)opt_outfile_name, MODE_NEWFILE);
+            }
+            if (file) {
+                if (!isatty(file)) {
+                    int def = 'N';
+                    ulong st, end;
+                    if (!opt_quiet) {
+                        message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
+                                megs((unsigned long long)p->total_blocks * p->block_size),
+                                tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
+                        message("start block: %lu  end block: %lu total blocks: %lu", p->start_block, p->end_block,
+                                p->total_blocks);
+                        message("block Size: %lu", p->block_size);
+                    }
+                    st = opt_start_block;
+                    end = opt_end_block;
+                    if (st == (ulong)-1) {
+                        st = p->start_block;
+                    }
+                    if (end == (ulong)-1) {
+                        end = p->end_block;
+                    }
+                    if (check_values(p, st, end, opt_expert)) {
+                        int do_it = 0; /* default do not. */
                         if (!opt_quiet) {
-                            message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
-                                    megs((unsigned long long)p->total_blocks * p->block_size),
-                                    tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
-                            message("start block: %lu  end block: %lu total blocks: %lu", p->start_block, p->end_block,
-                                    p->total_blocks);
-                            message("block Size: %lu", p->block_size);
-                        }
-                        st = opt_start_block;
-                        end = opt_end_block;
-                        if (st == (ulong)-1) {
-                            st = p->start_block;
-                        }
-                        if (end == (ulong)-1) {
-                            end = p->end_block;
-                        }
-                        if (check_values(p, st, end, opt_expert)) {
-                            int do_it = 0; /* default do not. */
-                            if (!opt_quiet) {
-                                message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
-                                        ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
-                                def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
-                                               opt_outfile_name ? opt_outfile_name : "stdout");
-                                if (tolower(def) == 'y') {
-                                    do_it = 1;
-                                }
-                            } else {
-                                /* in quiet mode we always work. */
+                            message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
+                                    ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
+                            def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
+                                           opt_outfile_name ? opt_outfile_name : "stdout");
+                            if (tolower(def) == 'y') {
                                 do_it = 1;
                             }
-                            if (do_it) {
-                                dev_to_file(p->unit->name, p->unit->unit, p->unit->bytes_per_block, file, st, end);
-                            } else {
-                                message("ok, quiting...");
-                            }
+                        } else {
+                            /* in quiet mode we always work. */
+                            do_it = 1;
                         }
-                    } else {
-                        warn_message("Pipes and re-direction will work but interactive\n"
-                                     "input/output is prohibited.");
+                        if (do_it) {
+                            dev_to_file(p->unit->name, p->unit->unit, p->unit->bytes_per_block, file, st, end);
+                        } else {
+                            message("ok, quiting...");
+                        }
                     }
-                    if (opt_outfile_name) {
-                        Close(file);
-                    }
+                } else {
+                    warn_message("Pipes and re-direction will work but interactive\n"
+                                 "input/output is prohibited.");
                 }
-            } else {
-                warn_message("could not locate a partition with your specs.");
+                if (opt_outfile_name) {
+                    Close(file);
+                }
             }
-            free_drive_list(dl);
+        } else {
+            warn_message("could not locate a partition with your specs.");
         }
-        if (!opt_outfile_name) {
-            fclose(mout);
-        }
+        free_drive_list(dl);
+    }
+    if (!opt_outfile_name) {
+        fclose(mout);
     }
     return (0);
 }
