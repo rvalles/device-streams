@@ -219,7 +219,6 @@ int main(int argc, char **argv) {
                 file = Open((unsigned char *)opt_outfile_name, MODE_NEWFILE);
             }
             if (file && !isatty(file)) {
-                int def = 'N';
                 ulong st, end;
                 if (!opt_quiet) {
                     message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
@@ -237,24 +236,17 @@ int main(int argc, char **argv) {
                     end = p->end_block;
                 }
                 if (check_values(p, st, end, opt_expert)) {
-                    int do_it = 0; /* default do not. */
+                    int accepted = 1; // default if opt_quiet
                     if (!opt_quiet) {
                         message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
                                 ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
-                        def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
-                                       opt_outfile_name ? opt_outfile_name : "stdout");
-                        if (tolower(def) == 'y') {
-                            do_it = 1;
-                        }
-                    } else {
-                        /* in quiet mode we always work. */
-                        do_it = 1;
+                        accepted = 'y' == tolower(ask_bool('N', 'y', "write from partition \"%s\" to file \"%s\"", p->name,
+                                                           opt_outfile_name ? opt_outfile_name : "stdout"));
                     }
-                    if (do_it) {
+                    if (accepted)
                         dev_to_file(p->unit->name, p->unit->unit, p->unit->bytes_per_block, file, st, end);
-                    } else {
+                    else
                         message("ok, quiting...");
-                    }
                 }
             } else if (file && isatty(file)) {
                 warn_message("Pipes and re-direction will work but interactive\n"
