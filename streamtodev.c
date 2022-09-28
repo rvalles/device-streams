@@ -47,7 +47,7 @@ int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
 
-void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end);
+void file_to_dev(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end);
 int check_values(Partition *p, ulong st, ulong end, int exp);
 
 struct option long_options[] = {{"input", required_argument, NULL, 'f'},
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
     int opt_help = 0;
     int longind = 0;
     struct List *dl;
-    FILE *file = NULL;
+    BPTR file = 0;
 
     signal(SIGINT, SIG_IGN);
 
@@ -206,7 +206,7 @@ int main(int argc, char **argv) {
             if (!min) {
                 return (20);
             }
-            file = stdin;
+            file = Input();
         }
         /* there should be NO messages before this point!! */
         dl = get_drive_list();
@@ -214,10 +214,10 @@ int main(int argc, char **argv) {
             Partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
             if (p) {
                 if (opt_infile_name) {
-                    file = fopen(opt_infile_name, "r");
+                    file = Open((unsigned char *)opt_infile_name, MODE_OLDFILE);
                 }
                 if (file) {
-                    if (!isatty(fileno(file))) {
+                    if (!isatty(file)) {
                         int def = 'N';
                         ulong st, end;
                         if (!opt_quiet) {
@@ -261,7 +261,7 @@ int main(int argc, char **argv) {
                                      "input/output is prohibited.");
                     }
                     if (opt_infile_name) {
-                        fclose(file);
+                        Close(file);
                     }
                 }
             } else {
@@ -276,7 +276,7 @@ int main(int argc, char **argv) {
     return (0);
 }
 
-void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end) {
+void file_to_dev(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end) {
     DeviceData *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
     if (dd) {
         ulong num_buffers = number_of_buffer_blocks;
@@ -292,8 +292,8 @@ void file_to_dev(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                             ((bw + (num_buffers / 2)) * 100 / total_blocks));
                     fflush(mout);
                 }
-                bytetw = fread(buffer, 1, bpb * num_buffers, file);
-                if ((bytetw != (num_buffers * bpb)) && ferror(file)) {
+                bytetw = Read(file, buffer, bpb * num_buffers);
+                if (bytetw == (ulong)-1) {
                     fprintf(mout, "\n");
                     warn_message("couldn't complete operation, read failed.");
                     break;

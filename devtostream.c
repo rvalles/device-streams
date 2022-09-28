@@ -47,7 +47,7 @@ int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
 
-void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end);
+void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end);
 int check_values(Partition *p, ulong st, ulong end, int exp);
 
 struct option long_options[] = {{"output", required_argument, NULL, 'o'},
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
     int opt_help = 0;
     int longind = 0;
     struct List *dl;
-    FILE *file = NULL;
+    BPTR file = 0;
 
     signal(SIGINT, SIG_IGN);
 
@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
             if (!mout) {
                 return (20);
             }
-            file = stdout;
+            file = Output();
         }
         /* there should be NO messages before this point!! */
         dl = get_drive_list();
@@ -213,10 +213,10 @@ int main(int argc, char **argv) {
             Partition *p = find_partition(dl, opt_device_name, opt_rdb_name, opt_unit, opt_start_block, opt_end_block);
             if (p) {
                 if (opt_outfile_name) {
-                    file = fopen(opt_outfile_name, "w");
+                    file = Open((unsigned char *)opt_outfile_name, MODE_NEWFILE);
                 }
                 if (file) {
-                    if (!isatty(fileno(file))) {
+                    if (!isatty(file)) {
                         int def = 'N';
                         ulong st, end;
                         if (!opt_quiet) {
@@ -260,7 +260,7 @@ int main(int argc, char **argv) {
                                      "input/output is prohibited.");
                     }
                     if (opt_outfile_name) {
-                        fclose(file);
+                        Close(file);
                     }
                 }
             } else {
@@ -275,7 +275,7 @@ int main(int argc, char **argv) {
     return (0);
 }
 
-void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong end) {
+void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end) {
     DeviceData *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
     if (dd) {
         ulong num_buffers = number_of_buffer_blocks;
@@ -309,7 +309,7 @@ void dev_to_file(char *name, ulong unit, ulong bpb, FILE *file, ulong cb, ulong 
                     fprintf(mout, "writing: 0x%08lx -> 0x%08lx  [%3lu%%] \r", cb, cb + num_buffers - 1, (bw * 100 / total_blocks));
                     fflush(mout);
                 }
-                if (num_buffers != fwrite(buffer, bpb, num_buffers, file)) {
+                if (bpb * num_buffers != (unsigned int)Write(file, buffer, bpb * num_buffers)) {
                     fprintf(mout, "\n");
                     warn_message("couldn't complete operation, write failed.");
                     break;
