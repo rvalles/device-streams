@@ -23,7 +23,7 @@ int check_values(Partition *p, ulong st, ulong end, int exp) {
         }
     }
     offset = (unsigned long long)st * p->block_size;
-    bytes = (unsigned long long)(end-st) * p->block_size;
+    bytes = (unsigned long long)(end - st) * p->block_size;
     if (offset >= 1ULL << 32 || offset + bytes - 1 >= 1ULL << 32) {
         message("error: Your block range requires 64bit I/O support.");
         return (0);
