@@ -122,8 +122,10 @@ int main(int argc, char **argv) {
     mout = stdout;
     min = stdin;
 
-    if (!argc)
+    if (!argc) {
+        printf("%s\nStart from Workbench not supported. Please start from Shell.\n", version_string);
         return 0;
+    }
     while (EOF != (opt = getopt_long(argc, argv, short_options, long_options, &longind))) {
         switch (opt) {
         case 'q':
