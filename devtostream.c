@@ -216,53 +216,50 @@ int main(int argc, char **argv) {
             if (opt_outfile_name) {
                 file = Open((unsigned char *)opt_outfile_name, MODE_NEWFILE);
             }
-            if (file) {
-                if (!isatty(file)) {
-                    int def = 'N';
-                    ulong st, end;
+            if (file && !isatty(file)) {
+                int def = 'N';
+                ulong st, end;
+                if (!opt_quiet) {
+                    message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
+                            megs((unsigned long long)p->total_blocks * p->block_size),
+                            tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
+                    message("start block: %lu  end block: %lu total blocks: %lu", p->start_block, p->end_block, p->total_blocks);
+                    message("block Size: %lu", p->block_size);
+                }
+                st = opt_start_block;
+                end = opt_end_block;
+                if (st == (ulong)-1) {
+                    st = p->start_block;
+                }
+                if (end == (ulong)-1) {
+                    end = p->end_block;
+                }
+                if (check_values(p, st, end, opt_expert)) {
+                    int do_it = 0; /* default do not. */
                     if (!opt_quiet) {
-                        message("found partition: \"%s\" capacity: %llu.%llu Megs", p->name,
-                                megs((unsigned long long)p->total_blocks * p->block_size),
-                                tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
-                        message("start block: %lu  end block: %lu total blocks: %lu", p->start_block, p->end_block,
-                                p->total_blocks);
-                        message("block Size: %lu", p->block_size);
-                    }
-                    st = opt_start_block;
-                    end = opt_end_block;
-                    if (st == (ulong)-1) {
-                        st = p->start_block;
-                    }
-                    if (end == (ulong)-1) {
-                        end = p->end_block;
-                    }
-                    if (check_values(p, st, end, opt_expert)) {
-                        int do_it = 0; /* default do not. */
-                        if (!opt_quiet) {
-                            message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
-                                    ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
-                            def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
-                                           opt_outfile_name ? opt_outfile_name : "stdout");
-                            if (tolower(def) == 'y') {
-                                do_it = 1;
-                            }
-                        } else {
-                            /* in quiet mode we always work. */
+                        message("dumping: start block: %lu to end block: %lu [size: %lluK]\n", st, end,
+                                ((unsigned long long)end - st) * p->unit->bytes_per_block / 1024);
+                        def = ask_bool(def, 'y', "write from partition \"%s\" to file \"%s\"", p->name,
+                                       opt_outfile_name ? opt_outfile_name : "stdout");
+                        if (tolower(def) == 'y') {
                             do_it = 1;
                         }
-                        if (do_it) {
-                            dev_to_file(p->unit->name, p->unit->unit, p->unit->bytes_per_block, file, st, end);
-                        } else {
-                            message("ok, quiting...");
-                        }
+                    } else {
+                        /* in quiet mode we always work. */
+                        do_it = 1;
                     }
-                } else {
-                    warn_message("Pipes and re-direction will work but interactive\n"
-                                 "input/output is prohibited.");
+                    if (do_it) {
+                        dev_to_file(p->unit->name, p->unit->unit, p->unit->bytes_per_block, file, st, end);
+                    } else {
+                        message("ok, quiting...");
+                    }
                 }
-                if (opt_outfile_name) {
-                    Close(file);
-                }
+            } else if (file && isatty(file)) {
+                warn_message("Pipes and re-direction will work but interactive\n"
+                             "input/output is prohibited.");
+            }
+            if (file && opt_outfile_name) {
+                Close(file);
             }
         } else {
             warn_message("could not locate a partition with your specs.");
