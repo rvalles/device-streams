@@ -61,11 +61,12 @@ struct option long_options[] = {{"output", required_argument, NULL, 'o'},
                                 {"unit", required_argument, NULL, 'u'},
                                 {"buffer-blocks", required_argument, NULL, 'b'},
                                 {"verbose", no_argument, NULL, 'V'},
+                                {"debug-mode", no_argument, NULL, 'g'},
                                 {"help", no_argument, NULL, 'h'},
                                 {"version", no_argument, NULL, 'v'},
                                 {"quiet", no_argument, NULL, 'q'},
                                 {NULL, 0, NULL, 0}};
-char *short_options = "?qvVhn:d:u:b:o:"
+char *short_options = "?qvVghn:d:u:b:o:"
 #if defined(EXPERT_VERSION)
                       "xs:e:"
 #endif
