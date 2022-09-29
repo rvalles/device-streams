@@ -55,8 +55,8 @@ struct option long_options[] = {{"rdb-name", required_argument, NULL, 'n'},
                                 {"version", no_argument, NULL, 'v'},
                                 {NULL, 0, NULL, 0}};
 char *short_options = "?vVxghn:s:e:d:u:";
-char *cmd_vers_string = "\0$VERS rdbinfo 1.99 (dev)";
-char *version_string = "rdbinfo V1.99-dev -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
+char *cmd_vers_string = "\0$VERS rdbinfo 2.0.0 (2022-09-30)";
+char *version_string = "rdbinfo V2.0.0 -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
                     "    -[vVxghnsedu] [--rdb-name=partition_name] [--expert-mode]\n"
