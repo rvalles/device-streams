@@ -25,11 +25,9 @@
  |  HISTORY
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #include "devices.h"
 #include "util.h"
 #include <stdbool.h>
-
 /* returns structure with device open. */
 DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
     DeviceData *dd = zmalloc(sizeof(*dd));
@@ -53,15 +51,12 @@ DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
     }
     dd->unit = unit;
     dd->flags = flags;
-
     if (open_device(dd)) {
         free_device(dd);
         return (NULL);
     }
-
     return (dd);
 }
-
 void free_device(DeviceData *dd) {
     if (dd) {
         close_device(dd);
@@ -70,7 +65,6 @@ void free_device(DeviceData *dd) {
         zfree(dd->name);
     }
 }
-
 int open_device(DeviceData *dd) {
     int error = -1;
     if (dd && !dd->open) {
@@ -87,7 +81,6 @@ int open_device(DeviceData *dd) {
     }
     return (error);
 }
-
 void close_device(DeviceData *dd) {
     if (dd) {
         if (dd->open) {
@@ -100,7 +93,6 @@ void close_device(DeviceData *dd) {
         }
     }
 }
-
 /* returns actual number of bytes read or written, or -1 for error. */
 ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer, bool write) {
     D(debug_message("dd %lu, Offset: 0x%llX, bytes: %lu, buffer: %lu", dd, offset, bytes, buffer));
@@ -117,17 +109,14 @@ ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, v
     }
     return (-1);
 }
-
 /* returns actual number of bytes read or -1 for error. */
 ulong device_read(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer) {
     return device_readwrite(dd, offset, bytes, buffer, false);
 }
-
 /* returns actual number of bytes written or -1 for error. */
 ulong device_write(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer) {
     return device_readwrite(dd, offset, bytes, buffer, true);
 }
-
 /* returns the error from DoIO () */
 int device_do_command(DeviceData *dd, UWORD command) {
     int error = -1;

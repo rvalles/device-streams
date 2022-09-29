@@ -1,5 +1,4 @@
 #include "util.h"
-
 int check_values(Partition *p, ulong st, ulong end, int exp) {
     unsigned long long offset;
     unsigned long long bytes;
@@ -30,7 +29,6 @@ int check_values(Partition *p, ulong st, ulong end, int exp) {
     }
     return (1);
 }
-
 int check_break(void) {
     if (SIGBREAKF_CTRL_C & SetSignal(0, SIGBREAKF_CTRL_C)) {
         return (1);

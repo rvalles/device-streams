@@ -38,7 +38,6 @@
  |  HISTORY
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #include "getdevices.h"
 #include "util.h"
 #include <devices/hardblocks.h>
@@ -46,24 +45,20 @@
 #include <dos/dosextens.h>
 #include <dos/filehandler.h>
 #include <string.h>
-
 struct List *get_drive_list(void) {
     struct DosList *dl;
     struct device *dev;
-
     struct List *drive_list = zmalloc(sizeof(*drive_list));
     if (drive_list == NULL) {
         return (NULL);
     }
     NewList(drive_list);
-
     D(debug_message("Walking (LDF_READ|LDF_DEVICES) dos list."));
     /* walk the dos list and fetch our device names. */
     dl = LockDosList(LDF_DEVICES | LDF_READ);
     {
         while (dl = NextDosEntry(dl, LDF_DEVICES), dl) {
             char *name;
-
             name = get_hard_drive_device_name(dl);
             if (name) { /* if the drive has a device */
                         /* name.  */
@@ -73,7 +68,6 @@ struct List *get_drive_list(void) {
     }
     UnLockDosList(LDF_DEVICES);
     D(debug_message("done walking (LDF_READ|LDF_DEVICES) dos list."));
-
     /* now get the units. */
     dev = ptrfrom(struct device, node, drive_list->lh_Head);
     while (dev->node.ln_Succ) {
@@ -90,7 +84,6 @@ struct List *get_drive_list(void) {
     }
     return (drive_list);
 }
-
 void free_drive_list(struct List *l) {
     struct device *d = ptrfrom(struct device, node, l->lh_Head);
     while (d->node.ln_Succ) {
@@ -106,14 +99,12 @@ void free_drive_list(struct List *l) {
         d = next;
     }
 }
-
 /* this function returns an error or 0 for success. */
 /* -1 for NO MEM. */
 /* 1 for already on list */
 int add_name_to_drive_list(struct List *l, char *dev_name) {
     if (!find_name(l, dev_name)) { /* not on list. */
         struct device *d;
-
         verbose_message("found new device \"%s\"", dev_name);
         d = zmalloc(sizeof(*d));
         if (d) {
@@ -131,7 +122,6 @@ int add_name_to_drive_list(struct List *l, char *dev_name) {
         return (1);
     }
 }
-
 char *get_hard_drive_device_name(struct DosList *dl) {
     struct DeviceNode *dn = (struct DeviceNode *)dl;
     if (dn->dn_Type == DLT_DEVICE) {
@@ -141,7 +131,6 @@ char *get_hard_drive_device_name(struct DosList *dl) {
             ULONG *envec = BADDR(m->fssm_Environ);
             char *name = BADDR(m->fssm_Device); /* null term bstring. */
             name++;                             /* inc for bstring adj. */
-
             if (valid_mem(envec) && valid_mem(name)) {
                 if (envec[DE_TABLESIZE] > DE_UPPERCYL) {
                     ulong dev_size = envec[DE_UPPERCYL] - envec[DE_LOWCYL] + 1;
@@ -160,7 +149,6 @@ char *get_hard_drive_device_name(struct DosList *dl) {
     }
     return (NULL);
 }
-
 ulong checksum(ulong sl, ulong *buf) {
     ulong ck = 0;
     while (sl--) {
@@ -168,7 +156,6 @@ ulong checksum(ulong sl, ulong *buf) {
     }
     return (ck);
 }
-
 void do_unit(struct device *dev, DeviceData *dd) {
     Unit *u = zmalloc(sizeof(*u));
     if (u) {
@@ -220,7 +207,6 @@ void do_unit(struct device *dev, DeviceData *dd) {
         }
     }
 }
-
 void free_unit(Unit *u) {
     if (u) {
         struct Node *n;
@@ -232,7 +218,6 @@ void free_unit(Unit *u) {
         zfree(u);
     }
 }
-
 void get_partitions(DeviceData *dd, Unit *u) {
     ulong bpb = u->bytes_per_block;
     struct PartitionBlock *pb = zmalloc(bpb);
@@ -240,7 +225,6 @@ void get_partitions(DeviceData *dd, Unit *u) {
         ulong partblock = u->rdb->rdb_PartitionList;
         while (partblock != (ulong)~0) {
             ulong nextpartblock = (ulong)~0;
-
             if (bpb != device_read(dd, (unsigned long long)partblock * bpb, bpb, pb)) {
                 verbose_message("warn: unable to read block: %lu from \"%s\" unit: %lu flags 0x%lx", partblock, dd->name, dd->unit,
                                 dd->flags);
@@ -264,14 +248,12 @@ void get_partitions(DeviceData *dd, Unit *u) {
                             p->end_block = (e[DE_UPPERCYL] + 1) * e[DE_NUMHEADS] * e[DE_BLKSPERTRACK] - 1;
                             p->total_blocks = p->end_block - p->start_block + 1;
                             p->block_size = e[DE_SIZEBLOCK] << 2;
-
                             /* the size stuff is convoluted to avoid overflow. */
                             verbose_message("| partition: \"%s\" sb: %lu eb: %lu totb: %lu", p->name, p->start_block, p->end_block,
                                             p->total_blocks);
                             verbose_message("|            Block Size: %lu Capacity: %llu.%llu", p->block_size,
                                             megs((unsigned long long)p->total_blocks * p->block_size),
                                             tenths_of_a_meg((unsigned long long)p->total_blocks * p->block_size));
-
                             nextpartblock = pb->pb_Next;
                             p->unit = u;
                             AddTail(&u->parts, &p->node);
@@ -283,7 +265,6 @@ void get_partitions(DeviceData *dd, Unit *u) {
                                      u->name);
                         break;
                     }
-
                 } else {
                     warn_message("found PART at %lu on unit %lu of \"%s\", failed checksum", partblock, u->unit, u->name);
                     break;
@@ -294,9 +275,7 @@ void get_partitions(DeviceData *dd, Unit *u) {
         zfree(pb);
     }
 }
-
 void free_partition(Partition *p) { zfree(p); }
-
 /* all the arguments, except the drive list itself, are search limiters. */
 /* they are generalized with: NULL for strings and (ulong)-1 for ulongs. */
 /* also the function returns as soon as all non-generalized criterion are met.*/

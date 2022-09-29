@@ -88,6 +88,6 @@ int check_break(void);
 /* END: "common.c" */
 /* START: "system" */
 #include <proto/alib.h>
-#include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/exec.h>
 /* END: "system" */

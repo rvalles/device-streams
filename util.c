@@ -25,18 +25,15 @@
  |  HISTORY
  |         chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #include "util.h"
 #include "string.h"
 #include <ctype.h>
+#include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-
 /* Utility functions */
-
 /* string functions.
  */
 int string_to_number(char *s, unsigned long *num) {
@@ -60,7 +57,6 @@ int string_to_number(char *s, unsigned long *num) {
         base = 16;
     } else if ((len && tolower(s[len - 1]) == 'h') || /* check nnnnnnnn[Hh] */
                (len > 1 && tolower(s[len - 2]) == 'h')) {
-
         /* Hex number */
         base = 16;
     } else if ((len && tolower(s[len - 1]) == 'o') || /* check nnnnnnnnnn[Oo] */
@@ -104,14 +100,12 @@ int string_to_number(char *s, unsigned long *num) {
     }
     return (ns - s); /* it worked */
 }
-
 char *stripws(char *s) {
     while (isspace(*s)) {
         s++;
     }
     return (s);
 }
-
 /* string = fgetline(fileptr)  :: replacement for fgets. no length limits. */
 /* -------------------------                                              */
 /* fgetline function returns a dynamic string of any length.  The string is */
@@ -119,22 +113,18 @@ char *stripws(char *s) {
 /* reason can be detirmened by feof() and errno.  On an error that is not */
 /* EOF will flush the buffer to EOL if possible.  The returned string has */
 /* the newline stripped. */
-
 /* sorry about the asm like comments I wrote this for a school project and */
 /* the prof is decidedly in favor of verbosity.  I think the code is clear */
 /* enough alone, and most of these comments clutter the clarity.  Oh well.*/
-
 char *fgetline(FILE *fp) {
     enum local_constants { locbufsize = 40 };
     char *retstr = NULL, *temp;
     char locbuf[locbufsize];
     unsigned char locbuflen = 0;
-
     while (1) { /* do forever. */
         while (locbuflen < (locbufsize - 1)) {
-            int ch = fgetc(fp); /* get next character from */
-                                /* stream.  */
-
+            int ch = fgetc(fp);      /* get next character from */
+                                     /* stream.  */
             if (ch == EOF) {         /* check for end of file. */
                 free_string(retstr); /* free_string retstr */
                                      /* if EOF. */
@@ -156,14 +146,12 @@ char *fgetline(FILE *fp) {
                                                  /* older string.  */
         locbuflen = 0;                           /* zero local buffer. */
         free_string(temp);                       /* free old string. */
-
         if (retstr == NULL) {
             flush_to_eol(fp); /* flush to EOL on fail. */
             return (NULL);    /* and return NULL. */
         }
     }
 }
-
 /* flush ``fp'' to end of line, if possible.  returns 0 on success or EOF for */
 /* error. */
 int flush_to_eol(FILE *fp) {
@@ -175,19 +163,16 @@ int flush_to_eol(FILE *fp) {
     }
     return (EOF);
 }
-
 /* Concatenate 2 strings into a new one.  Both or either of the inputs */
 /* ``before'' and ``after'' can be NULL.  returns NULL for failure */
 /* setting errno acordingly. */
 char *concat_strings(const char *before, const char *after) {
     char *string = NULL;
     int len1 = 0, len2 = 0;
-    if (before)                /* if non null */
-        len1 = strlen(before); /* get length */
-
-    if (after)                /* if non null */
-        len2 = strlen(after); /* get length */
-
+    if (before)                       /* if non null */
+        len1 = strlen(before);        /* get length */
+    if (after)                        /* if non null */
+        len2 = strlen(after);         /* get length */
     string = malloc(len1 + len2 + 1); /* allocate storage for */
     /* new string. */
     if (string) {
@@ -197,14 +182,12 @@ char *concat_strings(const char *before, const char *after) {
     }
     return (string); /* return string (or NULL) */
 }
-
 /* free_string() - frees a string gotten from misc string routines. input */
 /* can be NULL. */
 void free_string(char *string) {
     if (string)       /* if non NULL */
         free(string); /* free string. */
 }
-
 char *alloc_string(char *s) {
     char *d = malloc(strlen(s) + 1);
     if (d) {
@@ -212,7 +195,6 @@ char *alloc_string(char *s) {
     }
     return (d);
 }
-
 int ask_bool(int def, int other, char *f, ...) {
     char buffer[20];
     va_list ap;
@@ -231,7 +213,6 @@ int ask_bool(int def, int other, char *f, ...) {
     }
     return (def);
 }
-
 void *zmalloc(size_t b) {
     void *mem = malloc(b);
     if (mem) {
@@ -239,12 +220,10 @@ void *zmalloc(size_t b) {
     }
     return (mem);
 }
-
 void zfree(void *mem) {
     if (mem)
         free(mem);
 }
-
 struct Node *find_name(struct List *l, char *s) {
     struct Node *n = l->lh_Head;
     while (n->ln_Succ) {
@@ -255,7 +234,6 @@ struct Node *find_name(struct List *l, char *s) {
     }
     return (NULL);
 }
-
 void verbose_message(char *f, ...) {
     if (opt_verbose) {
         va_list ap;
@@ -264,7 +242,6 @@ void verbose_message(char *f, ...) {
         fprintf(mout, "\n");
     }
 }
-
 void debug_message(char *f, ...) {
     if (opt_debug) {
         va_list ap;
@@ -274,7 +251,6 @@ void debug_message(char *f, ...) {
         fprintf(mout, "\n");
     }
 }
-
 void verbose_debug_message(char *f, ...) {
     if (opt_verbose && opt_debug) {
         va_list ap;
@@ -284,14 +260,12 @@ void verbose_debug_message(char *f, ...) {
         fprintf(mout, "\n");
     }
 }
-
 void message(char *f, ...) {
     va_list ap;
     va_start(ap, f);
     vfprintf(mout, f, ap);
     fprintf(mout, "\n");
 }
-
 void warn_message(char *f, ...) {
     va_list ap;
     va_start(ap, f);
@@ -299,7 +273,6 @@ void warn_message(char *f, ...) {
     vfprintf(mout, f, ap);
     fprintf(mout, "\n");
 }
-
 void vmessage(char *f, va_list ap) {
     vfprintf(mout, f, ap);
     fprintf(mout, "\n");

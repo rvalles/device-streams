@@ -25,16 +25,12 @@
  |  HISTORY
  |   chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #if !defined(_GETDEVICES_H)
 #define _GETDEVICES_H
-
 #include "devices.h"
 #include "util.h"
-
 struct List *get_drive_list(void);
 void free_drive_list(struct List *l);
 int add_name_to_drive_list(struct List *l, char *dev_name);
 char *get_hard_drive_device_name(struct DosList *dl);
-
 #endif /* _GETDEVICES_H */

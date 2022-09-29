@@ -27,7 +27,6 @@
  |  HISTORY
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #include <ctype.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
@@ -40,16 +39,13 @@
 #undef __GNU_LIBRARY__
 #include "getdevices.h"
 #include <sys/unistd.h>
-
 #if defined(SASC)
 /* we will handle this ourselves. */
 int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
-
 void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end);
 int check_values(Partition *p, ulong st, ulong end, int exp);
-
 struct option long_options[] = {{"output", required_argument, NULL, 'o'},
                                 {"rdb-name", required_argument, NULL, 'n'},
 #if defined(EXPERT_VERSION)
@@ -71,10 +67,8 @@ char *short_options = "?qvVghn:d:u:b:o:"
                       "xs:e:"
 #endif
     ;
-
 char *cmd_vers_string = "\0$VERS devtostream 1.99 (dev)";
 char *version_string = "devtostream V1.99-dev -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
-
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
                     "    -[vVxghnsedubo] [--output=file] [--rdb-name=partition_name]\n"
@@ -92,7 +86,6 @@ char *help_string = "Usage: %s [options]\n"
                     "\n"
                     "    given the above you can also postpend a [MKk] for Megabyte\n"
                     "    Kilobyte and kilobyte respectively. [range checking inuse]";
-
 char *opt_outfile_name;
 char *opt_rdb_name;
 char *opt_device_name;
@@ -104,10 +97,8 @@ ulong opt_expert;
 ulong opt_debug;
 ulong opt_quiet = 0;
 ulong number_of_buffer_blocks = 128;
-
 FILE *mout;
 FILE *min;
-
 int main(int argc, char **argv) {
     int ret = 0;
     int opt;
@@ -117,12 +108,9 @@ int main(int argc, char **argv) {
     int longind = 0;
     struct List *dl;
     BPTR file = 0;
-
     signal(SIGINT, SIG_IGN);
-
     mout = stdout;
     min = stdin;
-
     if (!argc) {
         printf("%s\nStart from Workbench not supported. Please start from Shell.\n", version_string);
         return 0;
@@ -266,7 +254,6 @@ int main(int argc, char **argv) {
     }
     return (0);
 }
-
 void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end) {
     DeviceData *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
     if (dd) {
@@ -279,7 +266,6 @@ void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong e
                 if (num_buffers > (end - cb + 1)) {
                     num_buffers = (end - cb + 1);
                 }
-
                 if (check_break()) {
                     break;
                 }
@@ -294,7 +280,6 @@ void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong e
                     warn_message("couldn't complete operation, read failed.");
                     break;
                 }
-
                 /* Write to file. */
                 bw += num_buffers;
                 if (!opt_quiet) {

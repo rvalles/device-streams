@@ -27,7 +27,6 @@
  |  HISTORY
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #include <ctype.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
@@ -38,15 +37,12 @@
 #include <getopt.h>
 #undef __GNU_LIBRARY__
 #include "getdevices.h"
-
 #if defined(SASC)
 /* we will handle this ourselves. */
 int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
-
 void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block);
-
 struct option long_options[] = {{"rdb-name", required_argument, NULL, 'n'},
                                 {"start-block", required_argument, NULL, 's'},
                                 {"end-block", required_argument, NULL, 'e'},
@@ -59,10 +55,8 @@ struct option long_options[] = {{"rdb-name", required_argument, NULL, 'n'},
                                 {"version", no_argument, NULL, 'v'},
                                 {NULL, 0, NULL, 0}};
 char *short_options = "?vVxghn:s:e:d:u:";
-
 char *cmd_vers_string = "\0$VERS rdbinfo 1.99 (dev)";
 char *version_string = "rdbinfo V1.99-dev -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
-
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
                     "    -[vVxghnsedu] [--rdb-name=partition_name] [--expert-mode]\n"
@@ -78,7 +72,6 @@ char *help_string = "Usage: %s [options]\n"
                     "\n"
                     "    given the above you can also postpend a [MKk] for Megabyte\n"
                     "    Kilobyte and kilobyte respectively. [range checking inuse]";
-
 char *opt_rdb_name;
 char *opt_device_name;
 ulong opt_unit = -1;        /* -1 for any */
@@ -87,10 +80,8 @@ ulong opt_end_block = -1;   /* -1 for any */
 ulong opt_verbose;
 ulong opt_expert;
 ulong opt_debug;
-
 FILE *mout;
 FILE *min;
-
 int main(int argc, char **argv) {
     int ret = 0;
     int opt;
@@ -98,12 +89,9 @@ int main(int argc, char **argv) {
     int opt_version = 0;
     int opt_help = 0;
     int longind = 0;
-
     signal(SIGINT, SIG_IGN);
-
     mout = stdout;
     min = stdin;
-
     if (!argc) {
         printf("%s\nStart from Workbench not supported. Please start from Shell.\n", version_string);
         return (ret);
@@ -173,23 +161,18 @@ int main(int argc, char **argv) {
     }
     return (ret);
 }
-
 void get_info(struct List *dl, char *dev_name, char *part_name, ulong unit, ulong start_block, ulong end_block) {
     struct Node *dn, *un, *pn;
     int ctrlc = 0;
     unsigned long long bytes;
-
     /* walk list of devices. */
-
     for (dn = dl->lh_Head; (!ctrlc) && dn->ln_Succ; ctrlc = check_break(), dn = dn->ln_Succ) {
         struct device *d = ptrfrom(struct device, node, dn);
-
         if (dev_name == NULL || (!strcasecmp(dev_name, d->name))) {
             /* walk list of units. */
             for (un = d->units.lh_Head; (!ctrlc) && un->ln_Succ; ctrlc = check_break(), un = un->ln_Succ) {
                 Unit *u = ptrfrom(Unit, node, un);
                 int unit_printed = 0;
-
                 if (unit == (ulong)-1 || (u->unit == unit)) {
                     /* walk list of partitions. */
                     for (pn = u->parts.lh_Head; (!ctrlc) && pn->ln_Succ; ctrlc = check_break(), pn = pn->ln_Succ) {

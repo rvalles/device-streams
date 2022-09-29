@@ -25,14 +25,12 @@
  |  HISTORY
  |    chopps - Oct 9, 1993: Created.
  +--------------------------------------------------- */
-
 #if !defined(_DEVICES_H)
 #define _DEVICES_H
 #include "util.h"
 #include <exec/devices.h>
 #include <exec/io.h>
 #include <exec/ports.h>
-
 // TD64/Trackdisk64
 #define io_HighOffset io_Actual
 #define TD_READ64 24
@@ -50,10 +48,8 @@
 #define DEVICE_LEVEL_32BIT 1
 #define DEVICE_LEVEL_NSD 2
 #define DEVICE_LEVEL_TD64 3
-
 DeviceData *init_device(char *name, ulong unit, ulong flags, ulong iosize);
 int open_device(DeviceData *dd);
 void close_device(DeviceData *dd);
 void free_device(DeviceData *dd);
-
 #endif /* _DEVICES_H */
