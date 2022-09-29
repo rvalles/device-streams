@@ -47,10 +47,10 @@ lint:
 clean:
 	@echo "* Removing build artifacts..."
 	rm -f $(binaries) *.o devstreams.lha
-devstreams.lha: $(binaries)
+devstreams.lha: $(binaries) COPYING README.md
 	@echo "* Archiving into lha..."
 	mkdir devstreams
-	cp -a $(binaries) devstreams/
+	cp -a $(binaries) COPYING README.md devstreams/
 	$(lha) a $(lhaflags) $@ devstreams
 	rm -r devstreams
 	$(lha) v $@
