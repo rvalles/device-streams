@@ -4,6 +4,7 @@ crt = nix20
 # crt = nix13
 # crt = clib2
 lha = lha
+archive = device-streams.lha
 binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 commonobj = util.o getdevices.o devices.o common.o
 size = $(sdkprefix)size
@@ -46,8 +47,8 @@ lint:
 .PHONY: clean
 clean:
 	@echo "* Removing build artifacts..."
-	rm -f $(binaries) *.o devstreams.lha
-devstreams.lha: $(binaries) COPYING README.md
+	rm -f $(binaries) *.o $(archive)
+$(archive): $(binaries) COPYING README.md
 	@echo "* Archiving into lha..."
 	mkdir devstreams
 	cp -a $(binaries) COPYING README.md devstreams/
@@ -55,4 +56,4 @@ devstreams.lha: $(binaries) COPYING README.md
 	rm -r devstreams
 	$(lha) v $@
 .PHONY: dist
-dist: devstreams.lha
+dist: $(archive)
