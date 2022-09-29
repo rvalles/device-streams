@@ -7,6 +7,7 @@ lha = lha
 binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
 commonobj = util.o getdevices.o devices.o common.o
 size = $(sdkprefix)size
+#GNU
 CC = $(sdkprefix)gcc
 CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
 CFLAGS += -std=c99
@@ -14,6 +15,14 @@ CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -mcrt=$(crt)
 CFLAGS += -D DEBUG_ENABLED_VERSION=1
 LDFLAGS += -mcrt=$(crt)
+#VBCC (experimental)
+# sdkprefix = /opt/amiga/bin/
+# CC = $(sdkprefix)vc
+# PosixLib = /opt/amiga/share/PosixLib
+# # CFLAGS = +aos68k -cpu=68020 -O2 -I$(PosixLib)/include/
+# CFLAGS = -cpu=68020 -O2 -I$(PosixLib)/include/
+# LDFLAGS= -lposix -lamigas
+#Rules
 .PHONY: all
 all: $(binaries) size
 %.o: %.c *.h
