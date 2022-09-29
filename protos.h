@@ -87,10 +87,7 @@ int check_values(Partition *p, ulong st, ulong end, int exp);
 int check_break(void);
 /* END: "common.c" */
 /* START: "system" */
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
-#include <pragmas/dos_pragmas.h>
-#include <pragmas/exec_pragmas.h>
-extern struct Library *DOSBase;
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
 /* END: "system" */

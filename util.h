@@ -35,9 +35,6 @@
 #include <exec/memory.h>
 #include <exec/nodes.h>
 #include <exec/types.h>
-
-#include <clib/exec_protos.h>
-#include <pragmas/exec_pragmas.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
