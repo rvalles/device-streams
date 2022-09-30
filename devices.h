@@ -44,10 +44,7 @@
 #define NSCMD_TD_SEEK64 0xC002
 #define NSCMD_TD_FORMAT64 0xC003
 // 64bit device support level
-#define DEVICE_LEVEL_UNKNOWN 0
-#define DEVICE_LEVEL_32BIT 1
-#define DEVICE_LEVEL_NSD 2
-#define DEVICE_LEVEL_TD64 3
+enum { DEVICE_APILEVEL_UNKNOWN, DEVICE_APILEVEL_32BIT, DEVICE_APILEVEL_NSD, DEVICE_APILEVEL_TD64 };
 DeviceData *init_device(char *name, ulong unit, ulong flags, ulong iosize);
 int open_device(DeviceData *dd);
 void close_device(DeviceData *dd);
