@@ -55,6 +55,7 @@ DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
         free_device(dd);
         return (NULL);
     }
+    dd->apilevel = DEVICE_APILEVEL_UNKNOWN;
     return (dd);
 }
 void free_device(DeviceData *dd) {

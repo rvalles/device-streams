@@ -41,6 +41,7 @@ typedef struct device_data_s {
     ulong unit;
     ulong flags;
     int open;
+    short apilevel; // 64bit support level (values defined in devices.h)
 } DeviceData;
 /* START: "getdevices.c" */
 struct List *get_drive_list(void);
