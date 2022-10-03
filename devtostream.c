@@ -45,7 +45,6 @@ int __regargs chkabort(void) { return 0; }
 int __regargs Chk_Abort(void) { return 0; }
 #endif
 void dev_to_file(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end);
-int check_values(Partition *p, ulong st, ulong end, int exp);
 struct option long_options[] = {{"output", required_argument, NULL, 'o'},
                                 {"rdb-name", required_argument, NULL, 'n'},
 #if defined(EXPERT_VERSION)
