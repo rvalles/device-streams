@@ -31,6 +31,9 @@
 #include <exec/devices.h>
 #include <exec/io.h>
 #include <exec/ports.h>
+// Errors
+#define IOERR_OPENFAIL 0xFF
+#define IOERR_NOCMD 0xFD
 // TD64/Trackdisk64
 #define io_HighOffset io_Actual
 #define TD_READ64 24

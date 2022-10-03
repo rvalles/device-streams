@@ -29,7 +29,14 @@
 #include "util.h"
 #include <stdbool.h>
 bool test_td64(DeviceData *dd) {
+    int ioerr;
     if (dd) {
+        struct IOStdReq *io = (struct IOStdReq *)dd->io;
+        io->io_Length = 0;
+        io->io_Offset = 0;
+        io->io_HighOffset = 0;
+        ioerr = device_do_command(dd, TD_READ64);
+        return (ioerr != IOERR_NOCMD) && (ioerr != IOERR_OPENFAIL);
     }
     return false;
 }
