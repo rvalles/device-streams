@@ -50,6 +50,7 @@ writing: 0x00200950 -> 0x002009cf  [100%]
 * Removed SAS/C-isms and updated to build in modern toolchains.
 * Use of 64bit offsets throughout.
 * Safeguards added against 32bit overflow wraparound.
+* Use dos.library for file I/O.
 * (soon) Trackdisk 64 support.
 
 ## Building
