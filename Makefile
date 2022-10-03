@@ -1,8 +1,5 @@
 lintstyle = "{BasedOnStyle: llvm, IndentWidth: 4, ColumnLimit: 132}"
 sdkprefix = /opt/amiga/bin/m68k-amigaos-
-crt = nix20
-# crt = nix13
-# crt = clib2
 lha = lha
 archive = device-streams.lha
 binaries = rdbinfo devtostream streamtodev xdevtostream xstreamtodev
@@ -14,15 +11,20 @@ CFLAGS = -Os -fomit-frame-pointer -msmall-code -m68000
 CFLAGS += -std=c99
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -mcrt=$(crt)
-CFLAGS += -D DEBUG_ENABLED_VERSION=1
 LDFLAGS += -mcrt=$(crt)
-#VBCC (experimental)
+crt = nix20
+# crt = nix13
+# crt = clib2
+#VBCC
 # sdkprefix = /opt/amiga/bin/
 # CC = $(sdkprefix)vc
+# size = echo
 # PosixLib = /opt/amiga/share/PosixLib
-# # CFLAGS = +aos68k -cpu=68020 -O2 -I$(PosixLib)/include/
-# CFLAGS = -cpu=68020 -O2 -I$(PosixLib)/include/
+# # CFLAGS = +aos68k -sd -cpu=68020 -O2 -I$(PosixLib)/include/
+# CFLAGS = -sd -cpu=68020 -O2 -I$(PosixLib)/include/
 # LDFLAGS= -lposix -lamigas
+#Debug
+CFLAGS += -DDEBUG_ENABLED_VERSION=1
 #Rules
 .PHONY: all
 all: $(binaries) size
@@ -34,9 +36,9 @@ xstreamtodev: xstreamtodev.o $(commonobj)
 devtostream: devtostream.o $(commonobj)
 xdevtostream: xdevtostream.o $(commonobj)
 xstreamtodev.o: streamtodev.c $(commonobj)
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -DEXPERT_VERSION=1 $< -o $@
 xdevtostream.o: devtostream.c $(commonobj)
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) -D EXPERT_VERSION=1 $< -o $@
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -DEXPERT_VERSION=1 $< -o $@
 .PHONY: size
 size: $(binaries)
 	$(size) $(binaries)

@@ -64,6 +64,9 @@ Alternatively,
 Development is done using the `bebbo/amiga-gcc` crossdev toolchain.
 https://github.com/bebbo/amiga-gcc
 
+With some care so that building with `vbcc` is also supported.
+http://sun.hasenbraten.de/vbcc/
+
 ## Authors
 * Roc Vallès Domènech (2022)
 * Christian E. Hopps (1993)
