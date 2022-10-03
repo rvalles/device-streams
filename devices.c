@@ -28,6 +28,12 @@
 #include "devices.h"
 #include "util.h"
 #include <stdbool.h>
+short test_apilevel(DeviceData *dd) {
+    if (dd) {
+        return DEVICE_APILEVEL_32BIT;
+    }
+    return DEVICE_APILEVEL_UNKNOWN;
+}
 /* returns structure with device open. */
 DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
     DeviceData *dd = zmalloc(sizeof(*dd));
@@ -55,7 +61,7 @@ DeviceData *alloc_device(char *name, ulong unit, ulong flags, ulong iosize) {
         free_device(dd);
         return (NULL);
     }
-    dd->apilevel = DEVICE_APILEVEL_UNKNOWN;
+    dd->apilevel = test_apilevel(dd);
     return (dd);
 }
 void free_device(DeviceData *dd) {
