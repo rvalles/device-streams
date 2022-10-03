@@ -256,9 +256,21 @@ int main(int argc, char **argv) {
 void file_to_dev(char *name, ulong unit, ulong bpb, BPTR file, ulong cb, ulong end) {
     DeviceData *dd = alloc_device(name, unit, 0, sizeof(struct IOStdReq));
     if (dd) {
-        ulong num_buffers = number_of_buffer_blocks;
         ulong total_blocks = end - cb + 1;
+        // Sanity check.
+        unsigned long long offset;
+        unsigned long long bytes;
+        if (dd->apilevel <= DEVICE_APILEVEL_32BIT) {
+            offset = (unsigned long long)cb * bpb;
+            bytes = (unsigned long long)total_blocks * bpb;
+            if (offset >= 1ULL << 32 || offset + bytes - 1 >= 1ULL << 32) {
+                warn_message("error: Your block range requires 64bit I/O support.");
+                return;
+            }
+        }
+        // Sanity check end.
         ulong bw = 0, btw = 0, bytetw = 0;
+        ulong num_buffers = number_of_buffer_blocks;
         int last_write = 0;
         void *buffer = zmalloc(num_buffers * bpb);
         if (buffer) {
