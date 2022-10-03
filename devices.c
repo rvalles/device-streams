@@ -28,8 +28,22 @@
 #include "devices.h"
 #include "util.h"
 #include <stdbool.h>
+bool test_td64(DeviceData *dd) {
+    if (dd) {
+    }
+    return false;
+}
+bool test_nsd(DeviceData *dd) {
+    if (dd) {
+    }
+    return false;
+}
 short test_apilevel(DeviceData *dd) {
     if (dd) {
+        if (test_td64(dd))
+            return DEVICE_APILEVEL_TD64;
+        if (test_nsd(dd))
+            return DEVICE_APILEVEL_NSD;
         return DEVICE_APILEVEL_32BIT;
     }
     return DEVICE_APILEVEL_UNKNOWN;
