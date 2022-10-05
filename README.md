@@ -51,7 +51,7 @@ writing: 0x00200950 -> 0x002009cf  [100%]
 * Use of 64bit offsets throughout.
 * Safeguards added against 32bit overflow wraparound.
 * Use dos.library for file I/O.
-* (soon) Trackdisk 64 support.
+* Trackdisk 64 support.
 
 ## Building
 The new build process uses GNU Make. Simply review the Makefile and run `make`.
