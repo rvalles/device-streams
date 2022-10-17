@@ -28,7 +28,7 @@
 #include "devices.h"
 #include "util.h"
 #include <stdbool.h>
-bool test_td64(DeviceData *dd) {
+static bool test_td64(DeviceData *dd) {
     int ioerr;
     if (dd) {
         struct IOStdReq *io = (struct IOStdReq *)dd->io;
@@ -40,12 +40,34 @@ bool test_td64(DeviceData *dd) {
     }
     return false;
 }
-bool test_nsd(DeviceData *dd) {
+static bool test_nsd(DeviceData *dd) {
+    int ioerr;
+    unsigned short *supportedcommand;
+    NSDQR *nsdqr;
     if (dd) {
+        struct IOStdReq *io = (struct IOStdReq *)dd->io;
+        io->io_Data = 0;
+        io->io_Length = 0;
+        ioerr = device_do_command(dd, NSCMD_DEVICEQUERY);
+        if (ioerr == IOERR_NOCMD || ioerr == IOERR_OPENFAIL)
+            return false;
+        nsdqr = AllocMem(sizeof(NSDQR), 0);
+        if (!nsdqr)
+            return false;
+        io->io_Data = nsdqr;
+        io->io_Length = sizeof(NSDQR);
+        ioerr = device_do_command(dd, NSCMD_DEVICEQUERY);
+        supportedcommand = nsdqr->SupportedCommands; // Not allocated by us.
+        FreeMem(nsdqr, sizeof(NSDQR));
+        if (io->io_Actual < 16 || io->io_Actual > sizeof(NSDQR))
+            return false;
+        for (; *supportedcommand; supportedcommand++)
+            if (*supportedcommand == NSCMD_TD_READ64)
+                return true;
     }
     return false;
 }
-short test_apilevel(DeviceData *dd) {
+static short test_apilevel(DeviceData *dd) {
     if (dd) {
         if (test_td64(dd))
             return DEVICE_APILEVEL_TD64;
@@ -122,16 +144,15 @@ void close_device(DeviceData *dd) {
     }
 }
 /* returns actual number of bytes read or written, or -1 for error. */
-ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer, bool write) {
+static ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, void *buffer, bool write) {
     D(debug_message("dd %lu, Offset: 0x%llX, bytes: %lu, buffer: %lu", dd, offset, bytes, buffer));
     bool above32bit;
-
     above32bit = (offset >= 1ULL << 32 || offset + bytes - 1 >= 1ULL << 32);
-    if (above32bit && (dd->apilevel != DEVICE_APILEVEL_TD64)) {
+    if (above32bit && (dd->apilevel < DEVICE_APILEVEL_NSD)) {
         warn_message("64bit I/O request w/o support. Skip and return error.");
         return (-1);
     }
-    if (!above32bit) {
+    if (!above32bit && dd->apilevel >= DEVICE_APILEVEL_32BIT) {
         struct IOStdReq *io = (struct IOStdReq *)dd->io;
         io->io_Length = bytes;
         io->io_Offset = offset; // 32bit. Gets the lower half of offset.
@@ -141,14 +162,29 @@ ulong device_readwrite(DeviceData *dd, unsigned long long offset, ulong bytes, v
         }
         return (-1);
     } else {
-        struct IOStdReq *io = (struct IOStdReq *)dd->io;
-        io->io_Length = bytes;
-        io->io_Offset = offset;           // Gets the lower half of offset.
-        io->io_HighOffset = offset >> 32; // Upper half.
-        io->io_Data = buffer;
-        if (!device_do_command(dd, write ? TD_WRITE64 : TD_READ64)) {
-            return (io->io_Actual);
+        if (dd->apilevel == DEVICE_APILEVEL_TD64) {
+            struct IOStdReq *io = (struct IOStdReq *)dd->io;
+            io->io_Length = bytes;
+            io->io_Offset = offset;           // Gets the lower half of offset.
+            io->io_HighOffset = offset >> 32; // Upper half.
+            io->io_Data = buffer;
+            if (!device_do_command(dd, write ? TD_WRITE64 : TD_READ64)) {
+                return (io->io_Actual);
+            }
+            return (-1);
         }
+        if (dd->apilevel == DEVICE_APILEVEL_NSD) {
+            struct IOStdReq *io = (struct IOStdReq *)dd->io;
+            io->io_Length = bytes;
+            io->io_Offset = offset;           // Gets the lower half of offset.
+            io->io_HighOffset = offset >> 32; // Upper half.
+            io->io_Data = buffer;
+            if (!device_do_command(dd, write ? NSCMD_TD_WRITE64 : NSCMD_TD_READ64)) {
+                return (io->io_Actual);
+            }
+            return (-1);
+        }
+        warn_message("Unknown API level: %hu.", dd->apilevel);
         return (-1);
     }
 }

@@ -46,6 +46,14 @@
 #define NSCMD_TD_WRITE64 0xC001
 #define NSCMD_TD_SEEK64 0xC002
 #define NSCMD_TD_FORMAT64 0xC003
+// NSDeviceQueryResult/nsdqr
+typedef struct nsdqr_s {
+    unsigned int DevQueryFormat;
+    unsigned int SizeAvailable;
+    unsigned short DeviceType;
+    unsigned short DeviceSubType;
+    unsigned short *SupportedCommands; // pointer to 0-terminated array of commands.
+} NSDQR;
 // 64bit device support level
 enum { DEVICE_APILEVEL_UNKNOWN, DEVICE_APILEVEL_32BIT, DEVICE_APILEVEL_NSD, DEVICE_APILEVEL_TD64 };
 DeviceData *init_device(char *name, ulong unit, ulong flags, ulong iosize);
