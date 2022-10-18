@@ -52,6 +52,7 @@ writing: 0x00200950 -> 0x002009cf  [100%]
 * Safeguards added against 32bit overflow wraparound.
 * Use dos.library for file I/O.
 * Trackdisk 64 support.
+* NSD support.
 
 ## Building
 The new build process uses GNU Make. Simply review the Makefile and run `make`.
