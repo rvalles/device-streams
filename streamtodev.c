@@ -66,8 +66,8 @@ char *short_options = "?qvVghn:d:u:b:f:"
                       "xs:e:"
 #endif
     ;
-char *cmd_vers_string = "\0$VERS streamtodev 2.1.0 (2022-10-05)";
-char *version_string = "streamtodev V2.1.0 -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
+char *cmd_vers_string = "\0$VERS streamtodev 2.2.0 (2022-10-18)";
+char *version_string = "streamtodev V2.2.0 -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
                     "    -[vVxghnsedubo] [--input=file] [--rdb-name=partition_name]\n"

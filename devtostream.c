@@ -66,8 +66,8 @@ char *short_options = "?qvVghn:d:u:b:o:"
                       "xs:e:"
 #endif
     ;
-char *cmd_vers_string = "\0$VERS devtostream 2.1.0 (2022-10-05)";
-char *version_string = "devtostream V2.1.0 -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
+char *cmd_vers_string = "\0$VERS devtostream 2.2.0 (2022-10-18)";
+char *version_string = "devtostream V2.2.0 -- (C) 2022 Roc Valles Domenech, 1993 Christian E. Hopps\n";
 char *help_string = "Usage: %s [options]\n"
                     "Options:\n"
                     "    -[vVxghnsedubo] [--output=file] [--rdb-name=partition_name]\n"
