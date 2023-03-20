@@ -54,6 +54,13 @@ writing: 0x00200950 -> 0x002009cf  [100%]
 * Trackdisk 64 support.
 * NSD support.
 
+## Binaries built
+* rdbinfo: Examines RDB partition tables and lists the partitions.
+* streamtodev: Writes data from a stream into a device.
+* devtostream: Reads data from a device into a stream.
+* xstreamtodev: As streamtodev but with extra options to specify block range.
+* xdevtostream: As devtostream but with extra options to specify block range.
+
 ## Building
 The new build process uses GNU Make. Simply review the Makefile and run `make`.
 
