@@ -20,10 +20,7 @@ crt = nix20
 # CC = $(sdkprefix)vc
 # size = echo
 # PosixLib = /opt/amiga/share/PosixLib
-# # CFLAGS = +aos68k -sd -cpu=68020 -O2 -I$(PosixLib)/include/
-# # CFLAGS = -sd -cpu=68020 -O2 -I$(PosixLib)/include/
 # CFLAGS = -cpu=68020 -O2 -I$(PosixLib)/include/
-# #LDFLAGS= -lposix -lamigas
 # LDFLAGS= -lposix -lamiga
 #Debug
 CFLAGS += -DDEBUG_ENABLED_VERSION=1
