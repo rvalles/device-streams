@@ -4,6 +4,8 @@ Originally released by Christian E. Hopps in 1993, updated to be useful today.
 
 Requires AmigaOS 2.04+.
 
+https://github.com/rvalles/device-streams
+
 ## Usage
 Run the command with `-h` parameter to display usage information.
 
